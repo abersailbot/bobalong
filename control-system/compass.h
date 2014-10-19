@@ -9,45 +9,45 @@
 #ifndef COMPASS_H
 #define COMPASS_H
 
-#include "type_defs.h"
-
-// I2C device address
-#define HMC6343_ADDRESS 			0x19
-
-// HMC6343 registers
-#define HMC6343_BEARING_REG 		0x50
-
-namespace Compass
-{
+class HMC6343 {
+public:
 	/**********************************************************************************
-	 * Returns the boat's bearing
+	 * Initialises the wire library.
 	 * 
 	 *********************************************************************************/
-	bool GetBearing(BearingData& bearing);
+	void initialise();
 
 	/**********************************************************************************
-	 * Tries to read a register from the compass and puts the result in v0, v1, and v2.
+	 * Returns the compass's bearing.
 	 * 
-	 * @param  reg 				The register address to read.
-	 * @param  v0  				The first value.
-	 * @param  v1  				The second value.
-	 * @param  v2  				The third value.
-	 * 
-	 * @return     				Returns true if the read was succesful.
 	 *********************************************************************************/
-	static bool Read(byte reg, int& v0, int& v1, int& v2 );
+	int bearing();
 
 	/**********************************************************************************
-	 * Reads a single value from the compass and returns the result.
+	 * Returns the compass's pitch.
 	 * 
 	 *********************************************************************************/
-	static int ReadValue();
+	int pitch();
 
 	/**********************************************************************************
-	 * Combines a high and low byte into a single integer.
+	 * Returns the compass's roll.
 	 * 
 	 *********************************************************************************/
-	static int CombineByte(byte high, byte low);
-}
+	int roll();
+
+	/**********************************************************************************
+	 * Pools the compass to update its data.
+	 * 
+	 * @return 			Returns true if the compass was successfully polled.
+	 *********************************************************************************/
+	bool pool_data();
+private:
+	int bearing;
+	int pitch;
+	int roll;
+};
+
+// Arduino style
+HMC6343 Compass;
 
 #endif
