@@ -10,52 +10,62 @@
 #ifndef GPS_H
 #define GPS_H
 
+#include "TinyGPS.h"
+#include <SoftwareSerial.h>
 #include "Arduino.h"
-#include "type_defs.h"
 
-namespace GPS
-{
-	/**********************************************************************************
-	 * Initialises the GPS software serial.
-	 * 
-	 *********************************************************************************/
-	void Initialise();
+struct GPSPosition {
+	long latitude;
+	long longitude;
+};
 
-	/**********************************************************************************
-	 *  Determines if the GPS has a fix and returns true if it does.
-	 *  
-	 *********************************************************************************/
-	bool HasFix();
-
-	/**********************************************************************************
-	 * Returns the current position of the boat
-	 * 
-	 * @return 				Returns a GPSPosition struct containing latitude and longitude.
-	 * 
-	 *********************************************************************************/
-	GPSPosition GetPosition();
-
-	/**********************************************************************************
-	 * Returns the data and time from the GPS.
-	 * 
-	 * @return 				Returns a GPSDataTime struct containing time and date
-	 * 
-	 *********************************************************************************/
-	GPSDateTime GetDateTime();
-
-	/**********************************************************************************
-	 * Returns a struct containing the boat's GPS course and speed.
-	 * 
-	 * @return 				Returns a GPSCourse struct.
-	 * 
-	 *********************************************************************************/
-	GPSCourse GetCourse();
-
-	/**********************************************************************************
-	 * Updates all the GPS data.
-	 * 
-	 *********************************************************************************/
-	static void UpdateData();
+class GPSDateTime {
+public:
+	int hours();
+	int minutes();
+	int seconds();
+	int day();
+	int month();
+	int year();
+	unsigned long time;
+	unsigned long date;
 }
+
+class GPS {
+public:
+	/**********************************************************************************
+	 * Initialises a GPS that is connected to a specific rx and tx pin
+	 * 
+	 */
+	void initialise(int rx, int tx);
+
+	/**********************************************************************************
+	 * Returns the latest GPS position
+	 * 
+	 *********************************************************************************/
+	GPSPosition position();
+
+	/**********************************************************************************
+	 * Returns the latest GPS time and date
+	 * 
+	 *********************************************************************************/
+	GPSTime data_time();
+
+	/**********************************************************************************
+	 * Returns true if the GPS has a fix
+	 * 
+	 *********************************************************************************/
+	bool has_fix();
+
+	/**********************************************************************************
+	 * Polls the GPS for data and feeds that data to TinyGPS which converts
+	 * into something usable
+	 * 
+	 *********************************************************************************/
+	void poll_data();
+private:
+	SoftwareSerial gps_serial(0, 0);
+	TinyGPS tiny_gps;
+};
 
 #endif

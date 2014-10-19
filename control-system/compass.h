@@ -40,7 +40,7 @@ public:
 	 * 
 	 * @return 			Returns true if the compass was successfully polled.
 	 *********************************************************************************/
-	bool pool_data();
+	bool poll_data();
 private:
 	int bearing;
 	int pitch;

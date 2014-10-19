@@ -20,6 +20,8 @@
 void Compass::initialise()
 {
 	Wire.begin();
+	debug_print("I2C setup", DEBUG_LEVEL_IMPORTANT);
+	delay(500);
 }
 
 //////////////////////////////////////////////////////////////////////////
