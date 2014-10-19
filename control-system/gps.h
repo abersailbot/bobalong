@@ -68,4 +68,6 @@ private:
 	TinyGPS tiny_gps;
 };
 
+GPS Gps;
+
 #endif
