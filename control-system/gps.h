@@ -29,14 +29,14 @@ public:
 	int year();
 	unsigned long time;
 	unsigned long date;
-}
+};
 
 class GPS {
 public:
 	/**********************************************************************************
 	 * Initialises a GPS that is connected to a specific rx and tx pin
 	 * 
-	 */
+	 *********************************************************************************/
 	void initialise(int rx, int tx);
 
 	/**********************************************************************************

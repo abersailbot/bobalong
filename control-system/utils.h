@@ -7,9 +7,13 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+/*
+	Uncomment for the appropiate debug level
+ */
+
 #define DEBUG_LEVEL_MINOR		2
-#define DEBUG_LEVEL_IMPORTANT	1
-#define DEBUG_LEVEL_CRITICAL	0
+//#define DEBUG_LEVEL_IMPORTANT	1
+//#define DEBUG_LEVEL_CRITICAL	0
 
 /**********************************************************************************
  * Prints a debug message across the Arduino serial port. The message is only

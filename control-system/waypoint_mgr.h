@@ -8,53 +8,38 @@
 
 #pragma once
 
-#include "type_defs.h"
+#include "gps.h"
 
-namespace WaypointMgr
-{
-	struct Waypoint {
-		GPSPosition position;
-		Waypoint* next;
-	};
+#define NUM_WAYPOINTS		15
 
-	static uint waypoint_count;
-	static Waypoint* link_list;
+class WaypointManager {
+public:
+	/**********************************************************************************
+	 * Returns the number of waypoints left.
+	 * 
+	 **********************************************************************************/
+	int waypoints_left();
 
 	/**********************************************************************************
 	 * Returns the current waypoint.
-	 *********************************************************************************/
-	GPSPosition GetCurrentWaypoint();
-
-	/**********************************************************************************
-	 * Determines if the boat is in the proximity of the current waypoint
-	 * to be considered in range.
 	 * 
-	 * @param  curr_pos 			The current position of the boat.
 	 *********************************************************************************/
-	bool CheckProximity(GPSPosition curr_pos);
+	GPSPosition get_waypoint();
 
 	/**********************************************************************************
-	 * Advances the current waypoint to the next in line.
+	 * Advances to the next waypoint in the list
+	 * 
 	 *********************************************************************************/
-	void Advance();
+	void advance_waypoint();
 
 	/**********************************************************************************
-	 * Pushes a waypoint to the back of the waypoint list.
+	 * Pushes a waypoint into the manager's queue.
+	 * 
 	 *********************************************************************************/
-	void PushWaypoint(GPSPosition waypoint);
+	void push_waypoint(GPSPosition gps_pos);
+private:
+	int curr_index;
+	GPSPosition queue[NUM_WAYPOINTS];
+};
 
-	/**********************************************************************************
-	 * Returns a copy of the waypoint at a particular index
-	 *********************************************************************************/
-	GPSPosition GetWaypoint(uint index);
-
-	/**********************************************************************************
-	 * Returns the number of waypoints currently stored in the waypoint manager.
-	 *********************************************************************************/
-	uint GetWaypointCount();
-
-	/**********************************************************************************
-	 * Clears the manager of all waypoints
-	 *********************************************************************************/
-	void Clear();
-}
+WaypointManager WaypointMgr;

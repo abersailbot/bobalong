@@ -10,35 +10,45 @@
 #ifndef WIND_SENSOR_H
 #define WIND_SENSOR_H
 
-#include "type_defs.h"
-
-namespace WindSensor
-{
+class WindSensor {
+public:
 	/**********************************************************************************
 	 * Initialises the wind sensor. Creates and opens a software serial to the rowind.
 	 * 
 	 *********************************************************************************/
-	void Initialise();
+	void initialise(int rx, int tx);
 
 	/**********************************************************************************
-	 * Listens to the wind sensor's software serial and fills a wind data struct with
-	 * wind data.
-	 * 
-	 * @param  wind_data 			The struct to fill with wind data.
-	 * 
-	 * @return           			Returns true if the read operation was successful
+	 * Returns the last polled wind direction. Not relative to the boat's heading
 	 * 
 	 *********************************************************************************/
-	bool Read(WindData& wind_data);
+	int wind_direction();
 
+	/**********************************************************************************
+	 * Returns the last polled wind speed.
+	 * 
+	 *********************************************************************************/
+	double wind_speed();
+
+	/**********************************************************************************
+	 * Poll's the rowind's serial line and converts the nmea strings into usable data
+	 * 
+	 *********************************************************************************/
+	bool poll_data();
+private:
 	/**********************************************************************************
 	 * Returns a Rowind's NMEA string.
 	 * 
-	 * @return 						A char array of 30 characters, in the format:
-	 *                 				$IIMWV,315.0,R,000.00,N,A
+	 * @return 						A char array of 30 characters, in the format: $IIMWV,315.0,R,000.00,N,A
 	 * 
 	 *********************************************************************************/
-	static char* GetNMEA();
-}
+	char* get_nmea()
+
+	double speed;
+	int direction;
+	SoftwareSerial wind_serial(0, 0);
+};
+
+WindSensor Rowind;
 
 #endif
