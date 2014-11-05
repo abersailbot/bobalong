@@ -1,45 +1,68 @@
 /*
 	waypoint_mgr.h 
 
-	Contains a list of all the waypoints the boat will attempt to travel to.
+	Maintains a list of waypoints and functions for manipulating them
 
 	This code is released under the terms of the LGPLv3 licence.
  */
 
-#pragma once
 
-#include "gps.h"
+#ifndef WAYPOINT_MGR_H
+#define WAYPOINT_MGR_H
 
-#define NUM_WAYPOINTS		15
+#define WPMGR_MAX_WAYPOINTS		10
 
-class WaypointManager {
+class WaypointMgr {
 public:
-	/**********************************************************************************
-	 * Returns the number of waypoints left.
-	 * 
-	 **********************************************************************************/
-	int waypoints_left();
+	WaypointMgr();
 
 	/**********************************************************************************
-	 * Returns the current waypoint.
+	 * Returns the current waypoint we are on.
 	 * 
 	 *********************************************************************************/
-	GPSPosition get_waypoint();
+	GPSPosition current();
 
 	/**********************************************************************************
-	 * Advances to the next waypoint in the list
+	 * Returns the index of the waypoint we are on.
 	 * 
 	 *********************************************************************************/
-	void advance_waypoint();
+	int current_index()
 
 	/**********************************************************************************
-	 * Pushes a waypoint into the manager's queue.
+	 * Returns the number of waypoints stored.
 	 * 
 	 *********************************************************************************/
-	void push_waypoint(GPSPosition gps_pos);
+	unsigned int count();
+
+	/**********************************************************************************
+	 * Advances to the next waypoint, if we are already on the last
+	 * waypoint then we stay here and when finished() is called, true
+	 * will be returned
+	 * 
+	 *********************************************************************************/
+	void advance();
+
+	/**********************************************************************************
+	 * Returns true when advance is called on the last waypoint.
+	 * 
+	 *********************************************************************************/
+	bool finished();
+
+	/**********************************************************************************
+	 * Adds a new set of waypoints to the waypoint manager.
+	 * NOTE: Writes over the existing waypoints.
+	 * 
+	 * @param waypoint 			Array of new waypoints
+	 * @param num      			Number of waypoints
+	 *********************************************************************************/	
+	void add_waypoints(GPSPosition* waypoint, int num);
 private:
-	int curr_index;
-	GPSPosition queue[NUM_WAYPOINTS];
+	GPSPosition waypoints[WPMGR_MAX_WAYPOINTS];  // All the waypoints
+	unsigned int curr_waypoint; // The current waypoint we are on
+	unsigned int waypoint_end; // The index of the last waypoint in the array
+	bool finished; // Whether we have finished all the waypoints
 };
 
-WaypointManager WaypointMgr;
+WaypointMgr Waypoints;
+
+#endif

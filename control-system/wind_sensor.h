@@ -10,45 +10,35 @@
 #ifndef WIND_SENSOR_H
 #define WIND_SENSOR_H
 
-class WindSensor {
-public:
+#include "type_defs.h"
+
+namespace WindSensor
+{
 	/**********************************************************************************
 	 * Initialises the wind sensor. Creates and opens a software serial to the rowind.
 	 * 
 	 *********************************************************************************/
-	void initialise(int rx, int tx);
+	void Initialise();
 
 	/**********************************************************************************
-	 * Returns the last polled wind direction. Not relative to the boat's heading
+	 * Listens to the wind sensor's software serial and fills a wind data struct with
+	 * wind data.
+	 * 
+	 * @param  wind_data 			The struct to fill with wind data.
+	 * 
+	 * @return           			Returns true if the read operation was successful
 	 * 
 	 *********************************************************************************/
-	int wind_direction();
+	bool Read(WindData& wind_data);
 
-	/**********************************************************************************
-	 * Returns the last polled wind speed.
-	 * 
-	 *********************************************************************************/
-	double wind_speed();
-
-	/**********************************************************************************
-	 * Poll's the rowind's serial line and converts the nmea strings into usable data
-	 * 
-	 *********************************************************************************/
-	bool poll_data();
-private:
 	/**********************************************************************************
 	 * Returns a Rowind's NMEA string.
 	 * 
-	 * @return 						A char array of 30 characters, in the format: $IIMWV,315.0,R,000.00,N,A
+	 * @return 						A char array of 30 characters, in the format:
+	 *                 				$IIMWV,315.0,R,000.00,N,A
 	 * 
 	 *********************************************************************************/
-	char* get_nmea()
-
-	double speed;
-	int direction;
-	SoftwareSerial wind_serial(0, 0);
-};
-
-WindSensor Rowind;
+	static char* GetNMEA();
+}
 
 #endif

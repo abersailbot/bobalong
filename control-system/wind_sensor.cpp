@@ -9,34 +9,24 @@
 
 #include "wind_sensor.h"
 #include "Arduino.h"
-#include "utils.h"
+#include "pin_defs.h"
 #include <SoftwareSerial.h>
 
 #define DEBUG_ROWIND
 
+SoftwareSerial wind_ss(_RX_4, _TX_4);
+
 //////////////////////////////////////////////////////////////////////////
-void WindSensor::initialise(int rx, int tx)
+void WindSensor::Initialise()
 {
-	wind_serial = SoftwareSerial(rx, tx);
-	wind_serial.begin(4800);
+	wind_ss.begin(4800);
 }
 
 //////////////////////////////////////////////////////////////////////////
-int WindSensor::wind_direction()
+bool WindSensor::Read(WindData& wind_data)
 {
-	return direction;
-}
-
-//////////////////////////////////////////////////////////////////////////
-double WindSensor::wind_speed()
-{
-	return speed;
-}
-
-bool WindSensor::poll_data()
-{
-	wind_serial.listen();
-  	char* line = get_nmea();
+	wind_ss.listen();
+  	char* line = GetNMEA();
   	// Make sure nothing went wrong and that we have a valid line
   	if(line == 0) {
   		return false;
@@ -60,30 +50,38 @@ bool WindSensor::poll_data()
 		i++;
 	}
 
-	return true;	
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-char* WindSensor::get_nmea()
+char* WindSensor::GetNMEA()
 {
 	char nmea_buffer[50];
 	bool got_data = false;
 	unsigned long timeout = millis() + 5000;
 
-	debug_serial("Reading Rowind serial", DEBUG_LEVEL_MINOR);
+#ifdef DEBUG_ROWIND
+	Serial.println("Reading RoWind serial...");
+	delay(1000);
+#endif
 
 	// Keep going until we either get the correct data or timeout after
 	// 5 seconds
 	while(!got_data & millis() <= timeout) {
 		// Gives the rowind enough time to send a char
 		delay(3);
-		char c = wind_serial.read();
+		char c = wind_ss.read();
 
-		debug_serial(c, DEBUG_LEVEL_MINOR);
+		#ifdef DEBUG_ROWIND
+		Serial.print(c);
+		#endif
 
 		// Check if the char is the start of a nmea string
 		if(c == '$') {
-			debug_serial("\n", DEBUG_LEVEL_MINOR);
+			#ifdef DEBUG_ROWIND
+			// Starts a new line on the debug terminal, for better viewing
+			Serial.println();
+			#endif
 
 			// Once we know we are at the start of a nmea string we read
 			// until we hit the end of the string and store it in a buffer
@@ -91,7 +89,9 @@ char* WindSensor::get_nmea()
 			while(c != '\n' & i < 50) {
 				nmea_buffer[i] = c;
 
-				debug_serial(c, DEBUG_LEVEL_MINOR);
+				#ifdef DEBUG_ROWIND
+				Serial.print(c);
+				#endif
 
 				c = wind_ss.read();
 				i++;
@@ -100,13 +100,15 @@ char* WindSensor::get_nmea()
 			// Now check if we have a $IIMWV nmea string
 			if(nmea_buffer[1] == 'I') {
 				got_data = true;
-				debug_serial("Found $IIMWV", DEBUG_LEVEL_MINOR);
+				#ifdef DEBUG_ROWIND
+				Serial.println("Found $IIMWV");
+				#endif
 			}
 		}
 	}
 
     if(!got_data) {
-    	debug_serial("Rowind timeout!", DEBUG_LEVEL_CRITICAL);
+    	Serial.println("Rowind timeout");
         return 0;
     }
         

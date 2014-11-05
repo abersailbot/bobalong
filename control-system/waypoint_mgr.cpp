@@ -1,106 +1,76 @@
 /*
 	waypoint_mgr.cpp
 
-	Contains a list of all the waypoints the boat will attempt to travel to.
+	Maintains a list of waypoints and functions for manipulating them
 
 	This code is released under the terms of the LGPLv3 licence.
  */
 
 #include "waypoint_mgr.h"
-#include "math.h"
-
-#define WP_MGR_MAX_WAYPOINTS 		10
-#define WP_MGR_PROXIMITY			0.0001
+#include "utils.h"
 
 //////////////////////////////////////////////////////////////////////////
-/// Static Variables
-//////////////////////////////////////////////////////////////////////////
-
-//uint WaypointMgr::waypoint_count;
-//Waypoint* Waypoint::link_list;
-
-//////////////////////////////////////////////////////////////////////////
-GPSPosition WaypointMgr::GetCurrentWaypoint()
+WaypointMgr::WaypointMgr()
 {
-	return link_list->position;
+	curr_waypoint = 0;
+	waypoint_end = 0;
+	bool finished = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool WaypointMgr::CheckProximity(GPSPosition curr_pos)
+GPSPosition WaypointMgr::current()
 {
-	GPSPosition curr_wp = GetCurrentWaypoint();
-
-	if(fabs(curr_pos.latitude - curr_wp.latitude) <= WP_MGR_PROXIMITY && 
-		fabs(curr_pos.longitude - curr_wp.longitude) <= WP_MGR_PROXIMITY) {
-		return true;
-	} else {
-		return false;
-	}
+	return waypoints[curr_waypoint];
 }
 
 //////////////////////////////////////////////////////////////////////////
-void WaypointMgr::Advance()
+int WaypointMgr::current_index()
 {
-	// Can't advance if we have no more waypoints
-	if(waypoint_count > 1) {
-		Waypoint* next = link_list->next;
-		// Clean up the current waypoint
-		delete link_list;
-
-		link_list = next;
-	}
-
-	waypoint_count--;
+	return curr_waypoint;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void WaypointMgr::PushWaypoint(GPSPosition position)
+unsigned int WaypointMgr::count()
 {
-	if(waypoint_count != WP_MGR_MAX_WAYPOINTS) {
-		waypoint_count++;
-
-		// Create the new waypoint
-		Waypoint* wp = new Waypoint();
-		wp->position = position;
-
-		// Navigate to the last waypoint
-		Waypoint* next_wp = link_list;
-		for(uint i = 0; i < waypoint_count; i++) {
-			next_wp = next_wp->next;
-		}
-
-		// Store a pointer in the last element of the list
-		next_wp->next = wp;
-	}
+	return waypoint_end;
 }
 
 //////////////////////////////////////////////////////////////////////////
-GPSPosition WaypointMgr::GetWaypoint(uint index)
+void WaypointMgr::advance()
 {
-    Waypoint* next_wp = link_list;
-	for(uint i = 0; i <= index; i++) {
-		next_wp = next_wp->next;
+	if(current_index < waypoint_end) {
+		current_index++;
 	} 
-	return next_wp->position;
-}
-
-//////////////////////////////////////////////////////////////////////////
-uint WaypointMgr::GetWaypointCount()
-{
-	return waypoint_count;
-}
-
-//////////////////////////////////////////////////////////////////////////
-void WaypointMgr::Clear()
-{
-	uint curr_wp = 0;
-	for(uint i = 0; i < waypoint_count; i++) {
-		// Start from the first waypoint, advance to the current end and delete it
-		Waypoint* next_wp = link_list;
-		for(uint j = 0; j < waypoint_count - curr_wp; j++) {
-			next_wp = next_wp->next;
-		}
-		delete next_wp;
-		curr_wp++;
+	else (current_index == waypoint_end) {
+		finished = true;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+bool WaypointMgr::finished()
+{
+	return finished;
+}
+
+//////////////////////////////////////////////////////////////////////////
+void WaypointMgr::add_waypoints(GPSPosition* waypoint, unsigned int num)
+{
+	if(num == 0) {
+		debug_print("WARNING: No waypoints in the list to add!", DEBUG_LEVEL_CRITICAL);
+		finished = true;
+		return;
+	}
+	else if(num >= WPMGR_MAX_WAYPOINTS) {
+		debug_print("WARNING: More waypoints than space, some will be lost!", DEBUG_LEVEL_CRITICAL);
+		num = WPMGR_MAX_WAYPOINTS;
+	}
+
+	finished = false;
+	waypoint_end = num - 1;
+
+	for(unsigned int i = 0; i < num; i++) {
+		waypoints[i] = waypoint[i];
+	}
+
+	debug_print("Waypoints added!", DEBUG_LEVEL_IMPORTANT);
 }
