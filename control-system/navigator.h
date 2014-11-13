@@ -18,35 +18,51 @@ enum SAIL_MODE {
 
 class Navigator {
 public:
-	/**
-	 * Works out the desired heading of the boat, if the boat should tack or not. This is essentially the main sailing algorithm of the boat
+	Navigator();
+
+	/**********************************************************************************
+	 * Returns the current sailing mode the boat is in.
+
+	 *********************************************************************************/
+	SAIL_MODE sail_mode();
+
+	/**********************************************************************************
+	 * Performs the high level navigation of the boat. Works out:
+	 *		- The desired heading of the boat
+	 *		- Whether the boat should tack 
+	 *		- Whether the boat has arrived at its current waypoint target
 	 *
-	 */
+	 * @param heading 				The current heading of the boat
+	 * @param wind_dir 				The current direction of the wind.
+	 *
+	 *********************************************************************************/
 	void navigate(int heading, int wind_dir);
 
-	/**
+	/**********************************************************************************
 	 * Returns the angle at which the sail should be set.
 	 * 
-	 * @param  wind_dir 			The direction of the wind.
+	 * @param  wind_dir 			The direction of the wind relative to the boat
 	 * 
-	 */
+	 *********************************************************************************/
 	int get_sail_angle(int wind_dir);
 
-	/**
-	 * Returns the angle at which the rudder should be set.
-	 *
-	 * @param boat_heading 		The current heading of the boat
+	/**********************************************************************************
+	 * Returns the angle at which the rudder should be set. This is worked out by 
+	 * getting the difference between the boat's current heading and the desired 
+	 * heading, and then applying a PID function for a smooth turn.
 	 * 
-	 */
-	int get_rudder_angle(int compass_heading);
-
-	/**
-	 * Returns the current sailing mode the boat is in
-	 * @return [description]
-	 */
-	SAIL_MODE sail_mode();
+	 *********************************************************************************/
+	int get_rudder_angle(int heading);
 private:
+	/**********************************************************************************
+	 * Determines if we should tack or not.
+	 *
+	 *********************************************************************************/
+	bool should_tack();
+
 	int desired_heading;
+	int last_boat_heading;
+	int relative_wind;
 	SAIL_MODE curr_mode;
 	GPSPostiion tack_pos;
 };

@@ -1,3 +1,13 @@
+/*
+  TODO:
+    - Make sure forward is considered 180, far left is 0, far right is 360
+    - PID controller for setting the rudder position
+    - Double check rowind relative wind
+    - Check if SAIL_LEFT and SAIL_RIGHT is correct
+    - Updated this file with the new refactored code
+ */
+
+
 // Arduino Libraries
 #include <Servo.h>
 #include <Wire.h>
