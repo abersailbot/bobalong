@@ -2,6 +2,8 @@
 	navigation.h
 
 	Contains functions for returning navigation information.
+
+	NO LONGER IN USE AND PURELY FOR REFERENCE WILL BE REMOVED SOON!
  */
 
 #pragma once

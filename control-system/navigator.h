@@ -49,7 +49,9 @@ public:
 	/**********************************************************************************
 	 * Returns the angle at which the rudder should be set. This is worked out by 
 	 * getting the difference between the boat's current heading and the desired 
-	 * heading, and then applying a PID function for a smooth turn.
+	 * heading, and then applying a PI function for a smooth turn.
+	 *
+	 * @param 						The current boat heading
 	 * 
 	 *********************************************************************************/
 	int get_rudder_angle(int heading);
