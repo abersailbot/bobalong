@@ -49,7 +49,7 @@ public:
 	 * Returns the latest GPS time and date
 	 * 
 	 *********************************************************************************/
-	GPSTime data_time();
+	GPSDateTime data_time();
 
 	/**********************************************************************************
 	 * Returns true if the GPS has a fix

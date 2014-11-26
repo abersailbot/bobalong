@@ -6,7 +6,7 @@
 
 	This code is released under the terms of the LGPLv3 licence.
  */
-
+/*
 #include "navigator.h"
 
 #include "waypoint_mgr.h"
@@ -39,9 +39,9 @@ void Navigator::navigate(int heading, int wind_dir)
 	relative_wind = get_heading_diff(heading, wind_dir);
 
 
-	/*
-		Logic isn't complete
-	*/
+	
+		//Logic isn't complete
+	
 
 	switch(curr_mode) {
 		case SAIL_MODE::NORMAL:
@@ -115,4 +115,4 @@ bool Navigator::should_tack(int heading, int wind_dir)
 		return true;
 	}
 	return false;
-}
+}*/

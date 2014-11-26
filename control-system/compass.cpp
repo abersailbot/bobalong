@@ -17,7 +17,7 @@
 #define I2C_TIMEOUT_MS 				1000
 
 //////////////////////////////////////////////////////////////////////////
-void Compass::initialise()
+void HMC6343::initialise()
 {
 	Wire.begin();
 	debug_print("I2C setup", DEBUG_LEVEL_IMPORTANT);
@@ -25,32 +25,32 @@ void Compass::initialise()
 }
 
 //////////////////////////////////////////////////////////////////////////
-int Compass::bearing()
+int HMC6343::get_bearing()
 {
 	return bearing;
 }
 
 //////////////////////////////////////////////////////////////////////////
-int Compass::pitch()
+int HMC6343::get_pitch()
 {
 	return pitch;
 }
 
 //////////////////////////////////////////////////////////////////////////
-int Compass::roll()
+int HMC6343::get_roll()
 {
 	return roll;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool Compass::poll_data()
+bool HMC6343::poll_data()
 {
 	byte high, low;
-	unsigned long timeout;
+	unsigned long time_out;
         
 	// Select the bearing register to be read
 	Wire.beginTransmission(HMC6343_ADDRESS);  
-	Wire.write(reg);
+	Wire.write(HMC6343_BEARING_REG);
 	Wire.endTransmission();
 
 	// requests 6 bytes which will include bearing, pitch and roll

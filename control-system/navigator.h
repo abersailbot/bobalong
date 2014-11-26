@@ -7,7 +7,7 @@
 	This code is released under the terms of the LGPLv3 licence.
  */
 
-#ifndef NAVIGATOR_H
+#ifdef NAVIGATOR_H
 #define NAVIGATOR_H
 
 enum SAIL_MODE {

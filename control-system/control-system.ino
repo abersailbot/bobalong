@@ -1,5 +1,6 @@
 // Arduino Libraries
-
+#include <Wire.h>
+#include <SoftwareSerial.h>
 /////////////////////////////////////////////////////////////////
 #define TEST_COMPASS
 
@@ -42,7 +43,7 @@ void compass_test() {
 	Serial.println("Reading compass");
 	Compass.poll_data();
 	Serial.print("Heading: ");
-	Serial.println(Compass.bearing());	
+	Serial.println(Compass.get_bearing());	
 #endif
 }
 
