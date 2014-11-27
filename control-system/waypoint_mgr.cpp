@@ -9,6 +9,8 @@
 #include "waypoint_mgr.h"
 #include "utils.h"
 
+WaypointMgr Waypoints = WaypointMgr();
+
 //////////////////////////////////////////////////////////////////////////
 WaypointMgr::WaypointMgr()
 {
@@ -38,18 +40,18 @@ unsigned int WaypointMgr::count()
 //////////////////////////////////////////////////////////////////////////
 void WaypointMgr::advance()
 {
-	if(current_index < waypoint_end) {
-		current_index++;
+	if(curr_waypoint < waypoint_end) {
+		curr_waypoint++;
 	} 
-	else (current_index == waypoint_end) {
-		finished = true;
+	else if (curr_waypoint == waypoint_end) {
+		is_finished = true;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 bool WaypointMgr::finished()
 {
-	return finished;
+	return is_finished;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,7 +59,7 @@ void WaypointMgr::add_waypoints(GPSPosition* waypoint, unsigned int num)
 {
 	if(num == 0) {
 		debug_print("WARNING: No waypoints in the list to add!", DEBUG_LEVEL_CRITICAL);
-		finished = true;
+		is_finished = true;
 		return;
 	}
 	else if(num >= WPMGR_MAX_WAYPOINTS) {
@@ -65,7 +67,7 @@ void WaypointMgr::add_waypoints(GPSPosition* waypoint, unsigned int num)
 		num = WPMGR_MAX_WAYPOINTS;
 	}
 
-	finished = false;
+	is_finished = false;
 	waypoint_end = num - 1;
 
 	for(unsigned int i = 0; i < num; i++) {

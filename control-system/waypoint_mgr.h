@@ -7,6 +7,8 @@
  */
 
 
+#include "gps.h"
+
 #ifndef WAYPOINT_MGR_H
 #define WAYPOINT_MGR_H
 
@@ -26,7 +28,7 @@ public:
 	 * Returns the index of the waypoint we are on.
 	 * 
 	 *********************************************************************************/
-	int current_index()
+	int current_index();
 
 	/**********************************************************************************
 	 * Returns the number of waypoints stored.
@@ -55,14 +57,14 @@ public:
 	 * @param waypoint 			Array of new waypoints
 	 * @param num      			Number of waypoints
 	 *********************************************************************************/	
-	void add_waypoints(GPSPosition* waypoint, int num);
+	void add_waypoints(GPSPosition* waypoint, unsigned int num);
 private:
 	GPSPosition waypoints[WPMGR_MAX_WAYPOINTS];  // All the waypoints
 	unsigned int curr_waypoint; // The current waypoint we are on
 	unsigned int waypoint_end; // The index of the last waypoint in the array
-	bool finished; // Whether we have finished all the waypoints
+	bool is_finished; // Whether we have finished all the waypoints
 };
 
-WaypointMgr Waypoints;
+extern WaypointMgr Waypoints;
 
 #endif

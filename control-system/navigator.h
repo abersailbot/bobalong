@@ -7,7 +7,9 @@
 	This code is released under the terms of the LGPLv3 licence.
  */
 
-#ifdef NAVIGATOR_H
+#include "gps.h"
+
+#ifndef NAVIGATOR_H
 #define NAVIGATOR_H
 
 enum SAIL_MODE {
@@ -66,8 +68,8 @@ private:
 	int last_boat_heading;
 	int relative_wind;
 	SAIL_MODE curr_mode;
-	GPSPostiion tack_pos;
+	GPSPosition tack_pos;
 };
 
-Navigator Pilot;
+extern Navigator Pilot;
 #endif

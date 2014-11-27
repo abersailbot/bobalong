@@ -6,14 +6,14 @@
 	This code is released under the terms of the LGPLv3 licence.
  */
 
+#include "Arduino.h"
+
 #ifndef UTILS_H
 #define UTILS_H
 
 #define DEBUG_LEVEL_MINOR		2
 #define DEBUG_LEVEL_IMPORTANT	1
 #define DEBUG_LEVEL_CRITICAL	0
-
-#define DEBUG_LEVEL 			DEBUG_LEVEL_MINOR
 
 /**********************************************************************************
  * Prints a debug message across the Arduino serial port. The message is only

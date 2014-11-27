@@ -13,6 +13,7 @@
 #include "TinyGPS.h"
 #include <SoftwareSerial.h>
 #include "Arduino.h"
+#include "configure.h"
 
 struct GPSPosition {
 	long latitude;
@@ -34,10 +35,16 @@ public:
 class GPS {
 public:
 	/**********************************************************************************
+	 * Setups the GPS serial pins
+	 * 
+	 *********************************************************************************/
+	GPS();
+	
+	/**********************************************************************************
 	 * Initialises a GPS that is connected to a specific rx and tx pin
 	 * 
 	 *********************************************************************************/
-	void initialise(int rx, int tx);
+	void initialise();
 
 	/**********************************************************************************
 	 * Returns the latest GPS position
@@ -49,7 +56,7 @@ public:
 	 * Returns the latest GPS time and date
 	 * 
 	 *********************************************************************************/
-	GPSDateTime data_time();
+	GPSDateTime date_time();
 
 	/**********************************************************************************
 	 * Returns true if the GPS has a fix
@@ -64,10 +71,10 @@ public:
 	 *********************************************************************************/
 	void poll_data();
 private:
-	SoftwareSerial gps_serial(0, 0);
 	TinyGPS tiny_gps;
+	SoftwareSerial gps_serial;
 };
 
-GPS Gps;
+extern GPS Gps;
 
 #endif

@@ -48,6 +48,6 @@ private:
 };
 
 // Arduino style
-HMC6343 Compass;
+extern HMC6343 Compass;
 
 #endif

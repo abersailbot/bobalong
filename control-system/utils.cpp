@@ -7,14 +7,15 @@
  */
 
 #include "utils.h"
+#include "configure.h"
 
 //////////////////////////////////////////////////////////////////////////
 void debug_print(char* msg, int debug_level)
 {
 	if(debug_level <= DEBUG_LEVEL) {
-		Serial.print("Debug ");
-    	Serial.print(level);
-    	Serial.print(":");
+		Serial.print("[Debug ");
+    	Serial.print(debug_level);
+    	Serial.print("] ");
 		Serial.println(msg);
 	}
 }

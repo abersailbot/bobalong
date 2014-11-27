@@ -9,6 +9,8 @@
 
 #include "gps.h"
 
+GPS Gps = GPS();
+
 //////////////////////////////////////////////////////////////////////////
 int GPSDateTime::hours()
 {
@@ -43,14 +45,18 @@ int GPSDateTime::month()
 int GPSDateTime::year()
 {
 	byte year = date % 100;
-    year += *year > 80 ? 1900 : 2000;
+    year += year > 80 ? 1900 : 2000;
     return year;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void GPS::Initialise(int rx, int tx)
+GPS::GPS() 
+	:gps_serial(PIN_GPS_RX, 1)
+{ }
+
+//////////////////////////////////////////////////////////////////////////
+void GPS::initialise()
 {
-	gps_serial = SoftwareSerial(rx, tx);
 	gps_serial.begin(4800);
 	debug_print("GPS setup", DEBUG_LEVEL_IMPORTANT);
 	delay(500);
@@ -60,7 +66,7 @@ void GPS::Initialise(int rx, int tx)
 GPSPosition GPS::position()
 {
 	GPSPosition pos;
-	tiny_gps.get_position(&pos.lat, &pos.lon);
+	tiny_gps.get_position(&pos.latitude, &pos.longitude);
 	return pos;
 }
 
@@ -68,7 +74,7 @@ GPSPosition GPS::position()
 GPSDateTime GPS::date_time()
 {
 	GPSDateTime date_time;
-	tiny_gps.get_datatime(&gps_date, &gps_time);
+	tiny_gps.get_datetime(&date_time.date, &date_time.time);
 	return date_time;
 }
 
@@ -90,11 +96,11 @@ bool GPS::has_fix()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void GPS::poll_date()
+void GPS::poll_data()
 {
-	serial.listen();
+	gps_serial.listen();
 
-	while(serial.available()) {
-		tiny_gps.encode(serial.read());
+	while(gps_serial.available()) {
+		tiny_gps.encode(gps_serial.read());
 	}
 }
