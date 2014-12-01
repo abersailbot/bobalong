@@ -1,7 +1,7 @@
 /*
 	gps.c
 
-	Contains functions for dealing with the boat's GPS. To use the 
+	Contains functions for dealing with the boat's GPS. To use the
 	GPS it must first be initialised. The GPS uses TinyGPS to parse the GPS NMEA strings
 
 	This code is released under the terms of the LGPLv3 licence.
@@ -45,13 +45,13 @@ int GPSDateTime::month()
 int GPSDateTime::year()
 {
 	byte year = date % 100;
-    year += year > 80 ? 1900 : 2000;
-    return year;
+	year += year > 80 ? 1900 : 2000;
+	return year;
 }
 
 //////////////////////////////////////////////////////////////////////////
-GPS::GPS() 
-	:gps_serial(PIN_GPS_RX, 1)
+GPS::GPS()
+:gps_serial(PIN_GPS_RX, PIN_GPS_TX)
 { }
 
 //////////////////////////////////////////////////////////////////////////

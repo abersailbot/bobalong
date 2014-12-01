@@ -5,32 +5,47 @@
 	wind sensor uses a software serial to communicate with the device.
 
 	This code is released under the terms of the LGPLv3 licence.
- */
+*/
 
 #include "wind_sensor.h"
 #include "Arduino.h"
-#include "pin_defs.h"
+#include "configure.h"
 #include <SoftwareSerial.h>
 
 #define DEBUG_ROWIND
 
-SoftwareSerial wind_ss(_RX_4, _TX_4);
+Rowind WindSensor = Rowind();
 
 //////////////////////////////////////////////////////////////////////////
-void WindSensor::Initialise()
+Rowind::Rowind()
+	:rowind_serial(PIN_ROWIND_RX, PIN_ROWIND_TX)
 {
-	wind_ss.begin(4800);
+
+}
+
+int Rowind::get_speed() {
+	return speed;
+}
+
+int Rowind::get_direction() {
+	return direction;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool WindSensor::Read(WindData& wind_data)
+void Rowind::initialise()
 {
-	wind_ss.listen();
-  	char* line = GetNMEA();
-  	// Make sure nothing went wrong and that we have a valid line
-  	if(line == 0) {
-  		return false;
-  	}
+	rowind_serial.begin(4800);
+}
+
+//////////////////////////////////////////////////////////////////////////
+void Rowind::poll_data()
+{
+	rowind_serial.listen();
+	char* line = get_nmea();
+	// Make sure nothing went wrong and that we have a valid line
+	if(line == 0) {
+		debug_print("Error getting Rowind data!", DEBUG_LEVEL_CRITICAL);
+	}
 
 	// Parse line
 	char *s = line;
@@ -41,36 +56,34 @@ bool WindSensor::Read(WindData& wind_data)
 	while ((str = strtok_r( s, ",", &s )) != NULL ) {
 		// Second token contains the wind direction
 		if ( i == 1 ) {
-			wind_data.direction = atof( str );
+			direction = atof( str );
 
-		// fourth token contains wind speed
+			// fourth token contains wind speed
 		} else if ( i == 3 ) {
-			wind_data.speed = atof( str );
+			speed = atof( str );
 		}
 		i++;
 	}
-
-	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-char* WindSensor::GetNMEA()
+char* Rowind::get_nmea()
 {
 	char nmea_buffer[50];
 	bool got_data = false;
 	unsigned long timeout = millis() + 5000;
 
-#ifdef DEBUG_ROWIND
+	#ifdef DEBUG_ROWIND
 	Serial.println("Reading RoWind serial...");
 	delay(1000);
-#endif
+	#endif
 
 	// Keep going until we either get the correct data or timeout after
 	// 5 seconds
 	while(!got_data & millis() <= timeout) {
 		// Gives the rowind enough time to send a char
 		delay(3);
-		char c = wind_ss.read();
+		char c = rowind_serial.read();
 
 		#ifdef DEBUG_ROWIND
 		Serial.print(c);
@@ -93,7 +106,7 @@ char* WindSensor::GetNMEA()
 				Serial.print(c);
 				#endif
 
-				c = wind_ss.read();
+				c = rowind_serial.read();
 				i++;
 			}
 
@@ -107,10 +120,10 @@ char* WindSensor::GetNMEA()
 		}
 	}
 
-    if(!got_data) {
-    	Serial.println("Rowind timeout");
-        return 0;
-    }
-        
+	if(!got_data) {
+		debug_print("Rowind timed out, bad connection or no data!", DEBUG_LEVEL_CRITICAL);
+		return 0;
+	}
+
 	return nmea_buffer;
 }

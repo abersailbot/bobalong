@@ -1,56 +1,53 @@
 // Arduino Libraries
 #include <Wire.h>
 #include <SoftwareSerial.h>
-/////////////////////////////////////////////////////////////////
-#define TEST_COMPASS
-
 
 /////////////////////////////////////////////////////////////////
 // Boat libraries
-#include "pin_defs.h"
-
-#ifdef TEST_COMPASS
-	#include "compass.h"
-#endif#
-
-#ifdef TEST_ROWIND
-	#include "wind_sensor.h"
-#endif
-
-#ifdef TEST_GPS
-	#include "gps.h"
-#endif
+#include "compass.h"
+#include "wind_sensor.h"
+#include "gps.h"
 
 void setup() {
 	Serial.begin(9600);
 	Serial.println("Starting up");
-	
-#ifdef TEST_COMPASS
+
+	debug_print("Initialising Compass!", DEBUG_LEVEL_CRITICAL);
+	delay(200);
 	Compass.initialise();
-#endif
 
-#ifdef TEST_GPS
-	
-#endif
+	debug_print("Initialising GPS!", DEBUG_LEVEL_CRITICAL);
+	delay(200);
+	Gps.initialise();
 
-#ifdef TEST_ROWIND
-#endif
+	debug_print("Initialising Rowind!", DEBUG_LEVEL_CRITICAL);
+	delay(200);
+	WindSensor.initialise();
 }
 
-
+/////////////////////////////////////////////////////////////////
 void compass_test() {
-#ifdef TEST_COMPASS
 	Serial.println("Reading compass");
 	Compass.poll_data();
 	Serial.print("Heading: ");
-	Serial.println(Compass.get_bearing());	
-#endif
+	Serial.println(Compass.get_bearing());
 }
 
+/////////////////////////////////////////////////////////////////
 void gps_test() {
-	
+	// todo
 }
 
+/////////////////////////////////////////////////////////////////
+void rowind_test() {
+	// todo
+}
+
+/////////////////////////////////////////////////////////////////
 void loop() {
-	compass_test();
+	#ifdef TEST_SENSORS
+		compass_test();
+		gps_test();
+		rowind_test();
+	#endif
 }
