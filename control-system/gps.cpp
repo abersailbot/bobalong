@@ -86,7 +86,7 @@ bool GPS::has_fix()
 
 	tiny_gps.get_position(&lat, &lon, &fix_age);
 	if(fix_age == TinyGPS::GPS_INVALID_AGE) {
-		debug_print("WAARNING No GPS fix detected!", DEBUG_LEVEL_IMPORTANT);
+		debug_print("WARNING No GPS fix detected!", DEBUG_LEVEL_IMPORTANT);
 		return false;
 	} else if(fix_age > 5000) {
 		debug_print("WARNING Possibly old GPS data!", DEBUG_LEVEL_MINOR);
