@@ -1,9 +1,7 @@
-// Arduino Libraries
 #include <Wire.h>
 #include <SoftwareSerial.h>
 
-/////////////////////////////////////////////////////////////////
-// Boat libraries
+#include "utils.h" 
 #include "compass.h"
 #include "wind_sensor.h"
 #include "gps.h"
