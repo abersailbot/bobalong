@@ -109,8 +109,58 @@ int Navigator::get_sail_angle(int relative_wind)
 //////////////////////////////////////////////////////////////////////////
 int Navigator::get_rudder_angle(int heading)
 {
+	
+	// PI Controller
+
+	float pVal = 0.00;
+	float iVal = 0.00;
+	float pCorrection = 0.00;
+	float iCorrection = 0.00;
+	float error = 0.00;
+	float errorSum = 0.00;
+	int rudderAngle = 0;
+	int normalRudderPos = 90;
+
+
+	// The desired heading is now relative to zero
+	desired_heading -= heading;
+
+	// Finding out if the value should be negative or positive and how big
+	if (desired_heading > 180){
+		desired_heading -= 360;
+	}
+	else if (desired_heading < -180){
+		desired_heading += 360;
+	}
+
+	// A positive number means that the boat will turn right.
+	// A negative number is left
+
+	//  P
+	pVal = 1.00;
+	error = desired_heading;
+	pCorrection = pVal * error;
+
+
+	//  I
+	iVal = 0.00;
+	errorSum += error;
+	iCorrection = iVal * errorSum;
+
+	//errorSum * 0.95;
+
+	rudderAngle = normalRudderPos + (int)(pCorrection + iCorrection);
+
+	// Making sure the rudder does not go over 45 degrees from normal position (90 deg(?))
+	if (rudderAngle > (normalRudderPos + 45)){
+		rudderAngle = normalRudderPos + 45;
+	}
+	else if (rudderAngle < (normalRudderPos - 45)){
+		rudderAngle = normalRudderPos - 45;
+	}
+
 	// todo
-	return 90;
+	return rudderAngle;
 }
 
 //////////////////////////////////////////////////////////////////////////
