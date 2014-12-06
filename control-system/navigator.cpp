@@ -112,12 +112,12 @@ int Navigator::get_rudder_angle(int heading)
 	
 	// PI Controller
 
-	float pVal = 0.00;
-	float iVal = 0.00;
+	const float pVal = 1.00;
+	const float iVal = 0.00;
 	float pCorrection = 0.00;
 	float iCorrection = 0.00;
 	float error = 0.00;
-	float errorSum = 0.00;
+	static float errorSum = 0.00;
 	int rudderAngle = 0;
 	int normalRudderPos = 90;
 
@@ -139,13 +139,11 @@ int Navigator::get_rudder_angle(int heading)
 	// A negative number is right
 
 	//  P
-	pVal = 1.00;
 	error = desired_heading;
 	pCorrection = pVal * error;
 
 
 	//  I
-	iVal = 0.00;
 	errorSum += error;
 	iCorrection = iVal * errorSum;
 
