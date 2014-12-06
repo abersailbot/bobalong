@@ -133,8 +133,10 @@ int Navigator::get_rudder_angle(int heading)
 		desired_heading += 360;
 	}
 
-	// A positive number means that the boat will turn right.
-	// A negative number is left
+	desired_heading * -1;
+
+	// A positive number means that the boat will turn left.
+	// A negative number is right
 
 	//  P
 	pVal = 1.00;
