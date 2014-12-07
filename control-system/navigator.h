@@ -76,7 +76,7 @@ private:
 	float error = 0.00;
 	float errorSum = 0.00;
 	int rudderAngle = 0;
-	//#define round(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x) - 0.5))
+	#define rounding(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x) - 0.5));
 };
 
 extern Navigator Pilot;

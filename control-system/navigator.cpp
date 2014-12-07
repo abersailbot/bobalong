@@ -140,7 +140,7 @@ int Navigator::get_rudder_angle(int heading)
 	errorSum * 0.95;
 
 
-	rudderAngle = NORMAL_RUDDER_POS + (int)(pCorrection + iCorrection);
+	rudderAngle = NORMAL_RUDDER_POS + rounding(pCorrection + iCorrection);
 
 	// Making sure the rudder does not go over 45 degrees from normal position (90 deg(?))
 	if (rudderAngle > (NORMAL_RUDDER_POS + 45)){
