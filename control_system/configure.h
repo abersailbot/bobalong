@@ -25,7 +25,7 @@
 
 
 // GPS
-#define PIN_GPS_RX		     8
+#define PIN_GPS_RX        8
 #define PIN_GPS_TX         9
 #define PIN_GPS_ENABLE	   4 	// the enable must be high for the GPS to work,
                               // if its low then the gps is in sleep

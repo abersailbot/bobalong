@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 
-#include "utils.h"
+#include "utils.h" 
 #include "compass.h"
 #include "wind_sensor.h"
 #include "gps.h"
@@ -34,8 +34,6 @@ void compass_test() {
 /////////////////////////////////////////////////////////////////
 void gps_test() {
 	// todo
-	Serial.println("Reading GPS");
-	
 }
 
 /////////////////////////////////////////////////////////////////

@@ -100,9 +100,15 @@ void GPS::poll_data()
 {
 	gps_serial.listen();
 
+        /*if(gps_serial.available() > 0) {
+          Serial.println("d");
+        } else {
+          Serial.println("n");
+        }*/
+
 	while(gps_serial.available()) {
-		char c = gps_serial.read();
-		Serial.print(c);
+                char c = gps_serial.read();
+                //Serial.println(c);
 		tiny_gps.encode(c);
 	}
 }
