@@ -112,15 +112,6 @@ int Navigator::get_rudder_angle(int heading)
 
 	// PI Controller
 
-	const float pVal = 1.00;
-	const float iVal = 0.00;
-	float pCorrection = 0.00;
-	float iCorrection = 0.00;
-	float error = 0.00;
-	static float errorSum = 0.00;
-	int rudderAngle = 0;
-	int normalRudderPos = 90;
-
 
 	// The desired heading is now relative to zero
 	desired_heading -= heading;
@@ -133,29 +124,39 @@ int Navigator::get_rudder_angle(int heading)
 		desired_heading += 360;
 	}
 
+<<<<<<< HEAD
 
+=======
+	desired_heading *= -1;
+>>>>>>> 019ceb337686fbd1e253d600bf13a8c6da9e1862
 	// A positive number means that the boat will turn left.
 	// A negative number is right
 
+
 	//  P
+<<<<<<< HEAD
 	error = desired_heading * -1;
 	pCorrection = pVal * error;
+=======
+	error = desired_heading;
+	pCorrection = P_VAL * error;
+>>>>>>> 019ceb337686fbd1e253d600bf13a8c6da9e1862
 
 
 	//  I
 	errorSum += error;
-	iCorrection = iVal * errorSum;
+	iCorrection = P_VAL * errorSum;
+	errorSum * 0.95;
 
-	//errorSum * 0.95;
 
-	rudderAngle = normalRudderPos + (int)(pCorrection + iCorrection);
+	rudderAngle = NORMAL_RUDDER_POS + rounding(pCorrection + iCorrection);
 
 	// Making sure the rudder does not go over 45 degrees from normal position (90 deg(?))
-	if (rudderAngle > (normalRudderPos + 45)){
-		rudderAngle = normalRudderPos + 45;
+	if (rudderAngle > (NORMAL_RUDDER_POS + 45)){
+		rudderAngle = NORMAL_RUDDER_POS + 45;
 	}
-	else if (rudderAngle < (normalRudderPos - 45)){
-		rudderAngle = normalRudderPos - 45;
+	else if (rudderAngle < (NORMAL_RUDDER_POS - 45)){
+		rudderAngle = NORMAL_RUDDER_POS - 45;
 	}
 
 	// todo
