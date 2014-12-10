@@ -44,9 +44,9 @@ int HMC6343::get_roll(){
 bool HMC6343::poll_data(){
 	byte high, low;
 	unsigned long time_out;
-
+ 
 	// Select the bearing register to be read
-	Wire.beginTransmission(HMC6343_ADDRESS);
+	Wire.beginTransmission(HMC6343_ADDRESS);  
 	Wire.write(HMC6343_BEARING_REG);
 	Wire.endTransmission();
 

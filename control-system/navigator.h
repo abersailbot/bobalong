@@ -74,14 +74,6 @@ private:
 	int relative_wind;
 	SAIL_MODE curr_mode;
 	GPSPosition tack_pos;
-
-	// PID Controller
-	float pCorrection = 0.00;
-	float iCorrection = 0.00;
-	float error = 0.00;
-	float errorSum = 0.00;
-	int rudderAngle = 0;
-	#define rounding(x) ((x) >= 0 ? (int)((x) + 0.5) : (int)((x) - 0.5));
 };
 
 extern Navigator Pilot;

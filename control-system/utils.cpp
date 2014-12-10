@@ -28,7 +28,7 @@ int get_heading_diff(int heading0, int heading1)
 	if(heading_diff < -180) {
 		return 360 + heading_diff;
 	}
-
+	
 	if(heading_diff > 180) {
 		return 0 - (360 - heading_diff);
 	}

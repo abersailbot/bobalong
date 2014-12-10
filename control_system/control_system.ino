@@ -5,6 +5,7 @@
 #include "compass.h"
 #include "wind_sensor.h"
 #include "gps.h"
+#include "waypoint_mgr.h"
 
 void setup() {
 	Serial.begin(9600);
@@ -24,14 +25,16 @@ void setup() {
 
         // gps coordinates
         GPSPosition wps[3];
-        wp[0].latitude = 0;
-        wp[0].longitude = 0;
+        wps[0].latitude = 0;
+        wps[0].longitude = 0;
         
-        wp[1].latitude = 0;
-        wp[1].longitude = 0;
+        wps[1].latitude = 0;
+        wps[1].longitude = 0;
         
-        wp[2].latitude = 0;
-        wp[2].longitude = 0;
+        wps[2].latitude = 0;
+        wps[2].longitude = 0;
+
+        Waypoints.add_waypoints(wps, 3);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -45,7 +48,9 @@ void compass_test() {
 /////////////////////////////////////////////////////////////////
 void gps_test() {
 	// todo
-        Gps.poll_data();
+        Gps.print_nmea();
+        /*
+        //if(!Gps.has_fix()) {
 	Serial.println("Testing Gps");
 	if(!Gps.has_fix()){
           Serial.println("GPS waiting for fix");
@@ -55,7 +60,9 @@ void gps_test() {
                 delay(1000);
           }
 	}
-	Serial.println("\nFix found!");
+        */
+        //if(Gps.has_fix()) {
+	//Serial.println("\nFix found!");
 	GPSPosition pos = Gps.position();
 	Serial.print("position: "); Serial.print(pos.latitude); Serial.print(" "); Serial.println(pos.longitude);
 	GPSDateTime time = Gps.date_time();
@@ -67,11 +74,21 @@ void gps_test() {
 		Serial.print(time.day()); Serial.print("/");
 		Serial.print(time.month()); Serial.print("/");
 		Serial.println(time.year()); Serial.print("\n");
-
-
+        //}
+        
 }
 
 void waypoint_test() {
+      GPSPosition curr_pos = Gps.position();
+      GPSPosition wp = Waypoints.current();
+      float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude); 
+      if( dist < 10) {
+          Waypoints.advance();
+          Serial.println("Hit waypoint, moving onto next");  
+      } else {
+          Serial.print("Distance : ");
+          Serial.println(dist);
+      }
       
 }
 

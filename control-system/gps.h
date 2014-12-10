@@ -70,6 +70,8 @@ public:
 	 *
 	 *********************************************************************************/
 	void poll_data();
+
+        void print_nmea();
 private:
 	TinyGPS tiny_gps;
 	SoftwareSerial gps_serial;

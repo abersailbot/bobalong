@@ -5,6 +5,10 @@
 	GPS it must first be initialised. The GPS uses TinyGPS to parse the GPS NMEA strings
 
 	This code is released under the terms of the LGPLv3 licence.
+
+
+        TODO:
+          - A debug print function that prints the GPS NMEA
  */
 
 #include "gps.h"
@@ -100,9 +104,40 @@ void GPS::poll_data()
 {
 	gps_serial.listen();
 
+        /*if(gps_serial.available() > 0) {
+          Serial.println("d");
+        } else {
+          Serial.println("n");
+        }*/
+        char c;
 	while(gps_serial.available()) {
-		char c = gps_serial.read();
-		Serial.print(c);
-		tiny_gps.encode(c);
+                //while(gps_serial.available() == 0) { ; }
+                c = gps_serial.read();
+                //Serial.print(c);
+		if(tiny_gps.encode(c)){
+                    Serial.println("encoded");
+                   
+                 }
+             
 	}
+        Serial.println();
+}
+
+void GPS::print_nmea()
+{
+        gps_serial.listen();
+        bool not_found = 1;
+        char c;
+        while(not_found) {
+          if(gps_serial.available()) {
+             c = gps_serial.read();
+             Serial.print(c);
+             
+             if(c == '\n') {
+               not_found = 0;
+             }
+             tiny_gps.encode(c);
+          }
+        }
+        
 }
