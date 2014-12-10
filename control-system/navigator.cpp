@@ -87,10 +87,16 @@ int Navigator::get_rudder_angle(int heading)
 
 	// PI Controller
 
-	float desired_headingCP;
+
+	float pCorrection;
+	float iCorrection;
+	float error;
+	static float errorSum;
+	int rudderAngle;
+
 
 	// The desired heading is now relative to zero
-	desired_headingCP = desired_heading - heading;
+	float desired_headingCP = desired_heading - heading;
 
 	// Finding out if the value should be negative or positive and how big
 	if (desired_headingCP > 180){
@@ -105,7 +111,7 @@ int Navigator::get_rudder_angle(int heading)
 	// A negative number is right
 
 	//  P
-	error = desired_headingCP * -1;
+	error = desired_headingCP * (-1);
 	pCorrection = P_VAL * error;
 
 
@@ -115,7 +121,7 @@ int Navigator::get_rudder_angle(int heading)
 
 	//errorSum * 0.95;
 
-	rudderAngle = NORMAL_RUDDER_POS + ROUND(pCorrection + iCorrection);
+	rudderAngle = NORMAL_RUDDER_POS + round(pCorrection + iCorrection);
 
 	// Making sure the rudder does not go over 45 degrees from normal position (90 deg(?))
 	if (rudderAngle > (NORMAL_RUDDER_POS + 45)){
@@ -125,7 +131,6 @@ int Navigator::get_rudder_angle(int heading)
 		rudderAngle = NORMAL_RUDDER_POS - 45;
 	}
 
-	// todo
 	return rudderAngle;
 }
 
