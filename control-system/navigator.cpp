@@ -26,7 +26,7 @@ Navigator Pilot = Navigator();
 Navigator::Navigator()
 	:curr_mode(NORMAL)
 {
-
+	desired_heading = 166;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ int Navigator::get_rudder_angle(int heading)
 	errorSum += error;
 	iCorrection = I_VAL * errorSum;
 
-	//errorSum * 0.95;
+	errorSum *= 0.95;
 
 	rudderAngle = NORMAL_RUDDER_POS + round(pCorrection + iCorrection);
 

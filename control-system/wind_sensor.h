@@ -16,7 +16,7 @@ class Rowind {
 public:
 	Rowind();
 
-	int get_speed();
+	float get_speed();
 
 	int get_direction();
 
@@ -42,7 +42,7 @@ private:
 	*********************************************************************************/
 	char* get_nmea();
 
-	int speed;
+	float speed;
 	int direction;
 
 	SoftwareSerial rowind_serial;

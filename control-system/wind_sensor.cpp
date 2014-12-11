@@ -12,7 +12,7 @@
 #include "configure.h"
 #include <SoftwareSerial.h>
 
-#define DEBUG_ROWIND
+//#define DEBUG_ROWIND
 
 Rowind WindSensor = Rowind();
 
@@ -23,7 +23,7 @@ Rowind::Rowind()
 
 }
 
-int Rowind::get_speed() {
+float Rowind::get_speed() {
 	return speed;
 }
 
@@ -108,6 +108,7 @@ char* Rowind::get_nmea()
 
 				c = rowind_serial.read();
 				i++;
+				delay(5);
 			}
 
 			// Now check if we have a $IIMWV nmea string

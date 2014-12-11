@@ -9,7 +9,10 @@
 #include "waypoint_mgr.h"
 #include "navigator.h"
 
+Servo rudder;
+
 void setup() {
+	delay(5000);
 	Serial.begin(9600);
 	Serial.println("Starting up");
 
@@ -37,6 +40,7 @@ void setup() {
         wps[2].longitude = -4.066550;
 
         Waypoints.add_waypoints(wps, 3);
+				rudder.attach(PIN_RUDDER_DATA);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -85,19 +89,29 @@ void rowind_test() {
 }
 
 /////////////////////////////////////////////////////////////////
+void rudder_test() {
+	int bearing = Compass.get_bearing();
+	int rudder_pos = Pilot.get_rudder_angle(bearing);
+	rudder.write(rudder_pos);
+	Serial.print("Rudder Pos: "); Serial.println(rudder_pos);
+
+}
+
+/////////////////////////////////////////////////////////////////
 void loop() {
 	#ifdef TEST_SENSORS
-		gps_test();
-
+		//gps_test();
+		//Serial.println("test");
     compass_test();
+		//rowind_test();
+		rudder_test();
 		//waypoint_test();
 
-		Compass.poll_data();
-		int bearing = Compass.get_bearing();
-		if(Gps.has_fix()) {
+		/*if(Gps.has_fix()) {
 			Pilot.navigate(bearing, 0);
-		}
+		}*/
 
 		//rowind_test();
+		delay(50);
 	#endif
 }

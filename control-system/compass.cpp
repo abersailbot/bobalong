@@ -14,7 +14,7 @@
 #define HMC6343_ADDRESS 		0x19 // I2C device address
 #define HMC6343_BEARING_REG 		0x50
 
-#define I2C_TIMEOUT_MS 			1000
+#define I2C_TIMEOUT_MS 			2000
 
 HMC6343 Compass = HMC6343();
 

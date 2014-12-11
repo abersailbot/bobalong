@@ -36,12 +36,12 @@
 #define PIN_ROWIND_TX      11
 
 // Servo
-#define PIN_RUDDER_DATA	   5
+#define PIN_RUDDER_DATA	   11
 #define PIN_SAIL_DATA	   6
 
 // PI Controller
 #define P_VAL				1.00
-#define I_VAL				0.00
+#define I_VAL				0.01
 #define NORMAL_RUDDER_POS	90
 
 #endif
