@@ -40,8 +40,8 @@
 #define PIN_SAIL_DATA	   6
 
 // PI Controller
-#define P_VAL				1.00;
-#define I_VAL				0.00;
-#define NORMAL_RUDDER_POS	90;
+#define P_VAL				1.00
+#define I_VAL				0.00
+#define NORMAL_RUDDER_POS	90
 
 #endif

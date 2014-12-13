@@ -44,9 +44,9 @@ class TinyGPS
 {
 public:
   enum {
-    GPS_INVALID_AGE = 0xFFFFFFFF,      GPS_INVALID_ANGLE = 999999999, 
+    GPS_INVALID_AGE = 0xFFFFFFFF,      GPS_INVALID_ANGLE = 999999999,
     GPS_INVALID_ALTITUDE = 999999999,  GPS_INVALID_DATE = 0,
-    GPS_INVALID_TIME = 0xFFFFFFFF,		 GPS_INVALID_SPEED = 999999999, 
+    GPS_INVALID_TIME = 0xFFFFFFFF,		 GPS_INVALID_SPEED = 999999999,
     GPS_INVALID_FIX_TIME = 0xFFFFFFFF, GPS_INVALID_SATELLITES = 0xFF,
     GPS_INVALID_HDOP = 0xFFFFFFFF
   };
@@ -80,7 +80,7 @@ public:
   inline unsigned long hdop() { return _hdop; }
 
   void f_get_position(float *latitude, float *longitude, unsigned long *fix_age = 0);
-  void crack_datetime(int *year, byte *month, byte *day, 
+  void crack_datetime(int *year, byte *month, byte *day,
     byte *hour, byte *minute, byte *second, byte *hundredths = 0, unsigned long *fix_age = 0);
   float f_altitude();
   float f_course();
@@ -143,7 +143,7 @@ private:
   int gpsstrcmp(const char *str1, const char *str2);
 };
 
-#if !defined(ARDUINO) 
+#if !defined(ARDUINO)
 // Arduino 0012 workaround
 #undef int
 #undef char
@@ -151,7 +151,7 @@ private:
 #undef byte
 #undef float
 #undef abs
-#undef round 
+#undef round
 #endif
 
 #endif

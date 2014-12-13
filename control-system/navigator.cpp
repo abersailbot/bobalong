@@ -39,61 +39,36 @@ SAIL_MODE Navigator::sail_mode()
 void Navigator::navigate(int heading, int wind_dir)
 {
 	last_boat_heading = heading;
-	relative_wind = get_heading_diff(heading, wind_dir);
 
-	/*
+	// check waypoints
 
-		in need of a rewrite!
-
-	*/
-
-	// arduino throws a fit if we try to declare variables inside switches
 	GPSPosition curr_pos = Gps.position();
-	GPSPosition wp;
+	GPSPosition wp = Waypoints.current();
+	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
+	if( dist < 10) {
+		Waypoints.advance();
+		Serial.println("Hit waypoint, moving onto next");
+	} else {
+		Serial.print("Distance : ");
+		Serial.println(dist);
+	}
 
-	switch(curr_mode) {
-		case NORMAL:
-			// determine if we need to tack
-			if(should_tack()) {
-				curr_mode = TACK_LEFT;
-				tack_pos = Gps.position();
-			}
+	desired_heading = TinyGPS::course_to(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
 
-			// have we reached our waypoint
-			wp = Waypoints.current();
-			if(TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude) < MAX_WAYPOINT_DISTANCE) {
-				Waypoints.advance();
-			}
-			break;
-		case TACK_LEFT:
-			// can we return to normal sailing
-			if(!should_tack()) {
-				curr_mode = NORMAL;
-				break;
-			}
-			// do we need to switch tack
-			if(TinyGPS::distance_between(tack_pos.latitude, tack_pos.longitude, curr_pos.latitude, curr_pos.longitude) > TACK_DISTANCE) {
-				tack_pos = curr_pos;
-				curr_mode == TACK_RIGHT;
-			} else {
-				desired_heading += TACK_AMOUNT;
-			}
-			break;
-		case TACK_RIGHT:
-			// can we return to normal sailing
-			if(!should_tack()) {
-				curr_mode = NORMAL;
-			}
+	// set rudder
+	int rudder_pos = get_rudder_angle(heading);
+	if(rudder_pos < 85) {
+		Serial.println("Turn left!");
+	} else if(rudder_pos > 95) {
+		Serial.println("Turn right!");
+	}
+	Serial.print("Rudder pos: "); Serial.println(rudder_pos);
 
-			// do we need to switch tack
-			if(TinyGPS::distance_between(tack_pos.latitude, tack_pos.longitude, curr_pos.latitude, curr_pos.longitude) > TACK_DISTANCE) {
-				tack_pos = curr_pos;
-				curr_mode == TACK_LEFT;
-			} else {
-				desired_heading -= TACK_AMOUNT;
-			}
-			break;
-		}
+	//rudder.write(rudder_pos);
+
+	// set wing sail
+	//int sail_pos = get_sail_angle(wind_dir);
+	//sail.write(sail_pos);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,25 +87,17 @@ int Navigator::get_rudder_angle(int heading)
 
 	// PI Controller
 
-	const float pVal = 1.00;
-	const float iVal = 0.00;
-	float pCorrection = 0.00;
-	float iCorrection = 0.00;
-	float error = 0.00;
-	static float errorSum = 0.00;
-	int rudderAngle = 0;
-	int normalRudderPos = 90;
-
+	float desired_headingCP;
 
 	// The desired heading is now relative to zero
-	desired_heading -= heading;
+	desired_headingCP = desired_heading - heading;
 
 	// Finding out if the value should be negative or positive and how big
-	if (desired_heading > 180){
-		desired_heading -= 360;
+	if (desired_headingCP > 180){
+		desired_headingCP -= 360;
 	}
-	else if (desired_heading < -180){
-		desired_heading += 360;
+	else if (desired_headingCP < -180){
+		desired_headingCP += 360;
 	}
 
 
@@ -138,24 +105,24 @@ int Navigator::get_rudder_angle(int heading)
 	// A negative number is right
 
 	//  P
-	error = desired_heading * -1;
-	pCorrection = pVal * error;
+	error = desired_headingCP * -1;
+	pCorrection = P_VAL * error;
 
 
 	//  I
 	errorSum += error;
-	iCorrection = iVal * errorSum;
+	iCorrection = I_VAL * errorSum;
 
 	//errorSum * 0.95;
 
-	rudderAngle = normalRudderPos + (int)(pCorrection + iCorrection);
+	rudderAngle = NORMAL_RUDDER_POS + ROUND(pCorrection + iCorrection);
 
 	// Making sure the rudder does not go over 45 degrees from normal position (90 deg(?))
-	if (rudderAngle > (normalRudderPos + 45)){
-		rudderAngle = normalRudderPos + 45;
+	if (rudderAngle > (NORMAL_RUDDER_POS + 45)){
+		rudderAngle = NORMAL_RUDDER_POS + 45;
 	}
-	else if (rudderAngle < (normalRudderPos - 45)){
-		rudderAngle = normalRudderPos - 45;
+	else if (rudderAngle < (NORMAL_RUDDER_POS - 45)){
+		rudderAngle = NORMAL_RUDDER_POS - 45;
 	}
 
 	// todo

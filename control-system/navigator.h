@@ -13,6 +13,7 @@
   /**********************************************/
 
 #include "gps.h"
+#include <Servo.h>
 
 #ifndef NAVIGATOR_H
 #define NAVIGATOR_H
@@ -74,6 +75,17 @@ private:
 	int relative_wind;
 	SAIL_MODE curr_mode;
 	GPSPosition tack_pos;
+
+	float pCorrection;
+	float iCorrection;
+	float error;
+	float errorSum;
+	int rudderAngle;
+
+	#define ROUND(x) x > 0 ? (int)x+0.5 : (int)x-0.5
+
+	Servo rudder;
+	Servo sail;
 };
 
 extern Navigator Pilot;

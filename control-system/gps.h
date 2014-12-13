@@ -16,8 +16,8 @@
 #include "configure.h"
 
 struct GPSPosition {
-	long latitude;
-	long longitude;
+	float latitude;
+	float longitude;
 };
 
 class GPSDateTime {

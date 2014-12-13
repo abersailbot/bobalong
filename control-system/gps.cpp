@@ -70,7 +70,7 @@ void GPS::initialise()
 GPSPosition GPS::position()
 {
 	GPSPosition pos;
-	tiny_gps.get_position(&pos.latitude, &pos.longitude);
+	tiny_gps.f_get_position(&pos.latitude, &pos.longitude);
 	return pos;
 }
 
@@ -116,9 +116,9 @@ void GPS::poll_data()
                 //Serial.print(c);
 		if(tiny_gps.encode(c)){
                     Serial.println("encoded");
-                   
+
                  }
-             
+
 	}
         Serial.println();
 }
@@ -132,12 +132,12 @@ void GPS::print_nmea()
           if(gps_serial.available()) {
              c = gps_serial.read();
              Serial.print(c);
-             
+
              if(c == '\n') {
                not_found = 0;
              }
              tiny_gps.encode(c);
           }
         }
-        
+
 }
