@@ -28,20 +28,22 @@ void setup() {
 	delay(200);
 	WindSensor.initialise();
 
-        // gps coordinates
-        GPSPosition wps[3];
-        wps[0].latitude = 52.415603;
-        wps[0].longitude = -4.065145;
+    // gps coordinates
+    GPSPosition wps[3];
+    wps[0].latitude = 52.415603;
+    wps[0].longitude = -4.065145;
 
-        wps[1].latitude = 52.415454;
-        wps[1].longitude = -4.065937;
+    wps[1].latitude = 52.415454;
+    wps[1].longitude = -4.065937;
 
-        wps[2].latitude = 52.416385;
-        wps[2].longitude = -4.066550;
+    wps[2].latitude = 52.416385;
+    wps[2].longitude = -4.066550;
 
-        Waypoints.add_waypoints(wps, 3);
-				rudder.attach(PIN_RUDDER_DATA);
+    Waypoints.add_waypoints(wps, 3);
+	rudder.attach(PIN_RUDDER_DATA);
 }
+////////////////////////////////////////////////////////////////////////////////
+// MOVE INTO TESTING MODULE
 
 /////////////////////////////////////////////////////////////////
 void compass_test() {
@@ -96,6 +98,9 @@ void rudder_test() {
 	Serial.print("Rudder Pos: "); Serial.println(rudder_pos);
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
 void loop() {
