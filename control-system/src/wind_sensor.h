@@ -14,17 +14,9 @@
 
 class Rowind {
 public:
-	Rowind();
-
 	float get_speed();
 
 	int get_direction();
-
-	/**********************************************************************************
-	 * Opens a software serial connection to the rowind.
-	 *
-	*********************************************************************************/
-	void initialise();
 
 	/**********************************************************************************
 	 * Listens to the Rowind's serial line and tries to poll it for the wind speed

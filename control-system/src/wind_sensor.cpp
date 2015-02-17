@@ -10,14 +10,7 @@
 #include "wind_sensor.h"
 #include "Arduino.h"
 #include "configure.h"
-#include <SoftwareSerial.h>
 
-
-//////////////////////////////////////////////////////////////////////////
-Rowind::Rowind()
-{
-
-}
 
 float Rowind::get_speed() {
 	return speed;
@@ -28,15 +21,8 @@ int Rowind::get_direction() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-void Rowind::initialise()
-{
-	rowind_serial.begin(4800);
-}
-
-//////////////////////////////////////////////////////////////////////////
 void Rowind::poll_data()
 {
-	rowind_serial.listen();
 	char* line = get_nmea();
 	// Make sure nothing went wrong and that we have a valid line
 	if(line == 0) {
@@ -79,7 +65,7 @@ char* Rowind::get_nmea()
 	while(!got_data & millis() <= timeout) {
 		// Gives the rowind enough time to send a char
 		delay(3);
-		char c = rowind_serial.read();
+		char c = Serial1.read();
 
 		#ifdef DEBUG_ROWIND
 		Serial.print(c);
@@ -102,7 +88,7 @@ char* Rowind::get_nmea()
 				Serial.print(c);
 				#endif
 
-				c = rowind_serial.read();
+				c = Serial1.read();
 				i++;
 				delay(5);
 			}
