@@ -19,9 +19,15 @@
 #define SERVO_RUDDER    1
 
 /*******************************************************************************
+ * Initialises servos
+ *
+ ******************************************************************************/
+void initialise_servos();
+
+/*******************************************************************************
  * Sets the current serial line on the multiplexer.
  *
- * @param line          The serial line ot select, 1-4
+ * @param line          The serial line to select, 1-4
  *
  ******************************************************************************/
 void set_multiplexer(uint8_t line);
@@ -31,7 +37,7 @@ void set_multiplexer(uint8_t line);
  *
  * @param servo         The servo to set, either SERVO_SAIL or SERVO_RUDDER
  * @param angle         The angle to set it to
- * 
+ *
  ******************************************************************************/
 void set_servo(uint8_t servo, uint8_t angle);
 

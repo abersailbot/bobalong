@@ -17,7 +17,7 @@
 
 #define TEST_SENSORS
 
-//////////////////////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////////////////////
 ///
 /// Pin Definitions
 ///
@@ -31,19 +31,15 @@
                               		// if its low then the gps is in sleep
                               		// mode(Double check this).
 // multiplexer
-#define MULTIPLEXER_IN1_PIN		8
-#define MULTIPLEXER_IN2_PIN		9
+#define MULTIPLEXER_IN1_PIN		9
+#define MULTIPLEXER_IN2_PIN		8
 #define MULTIPLEXER_SD_LOGGER	1
 #define MULTIPLEXER_GPS			2
 #define MULTIPLEXER_ROWIND		3
 
-// Rowind (no longer used)
-#define PIN_ROWIND_RX		10
-#define PIN_ROWIND_TX      	11
-
 // Servo
 #define PIN_RUDDER_DATA	   	11
-#define PIN_SAIL_DATA	   	6
+#define PIN_SAIL_DATA	   	10
 
 // PI Controller
 #define P_VAL				1.00
