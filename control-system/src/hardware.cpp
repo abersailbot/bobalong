@@ -13,9 +13,10 @@
 
 #include "hardware.h"
 #include "Servo.h"
+#include "configure.h"
 
 Servo rudder;
-Servo sal;
+Servo sail;
 
 ////////////////////////////////////////////////////////////////////////////////
 void initialise_servos()
@@ -28,15 +29,15 @@ void initialise_servos()
 void set_multiplexer(uint8_t line)
 {
     if(line & 1) {
-        pinWrite(MULTIPLEXER_IN1_PIN, HIGH);
+        digitalWrite(MULTIPLEXER_IN1_PIN, HIGH);
     } else {
-        pinWrite(MULTIPLEXER_IN_PIN, LOW);
+        digitalWrite(MULTIPLEXER_IN1_PIN, LOW);
     }
 
     if(line & 2) {
-        pinWrite(MULTIPLEXER_IN2_PIN, HIGH);
+        digitalWrite(MULTIPLEXER_IN2_PIN, HIGH);
     } else {
-        pinWrite(MULTIPLEXER_IN2_PIN, LOW);
+        digitalWrite(MULTIPLEXER_IN2_PIN, LOW);
     }
 }
 

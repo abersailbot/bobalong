@@ -12,13 +12,9 @@
 #include "configure.h"
 #include <SoftwareSerial.h>
 
-//#define DEBUG_ROWIND
-
-Rowind WindSensor = Rowind();
 
 //////////////////////////////////////////////////////////////////////////
 Rowind::Rowind()
-	:rowind_serial(PIN_ROWIND_RX, PIN_ROWIND_TX)
 {
 
 }

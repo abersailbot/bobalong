@@ -1,0 +1,14 @@
+
+
+
+
+
+.build/uno/src/control-system.cpp : src/control-system.ino
+	@mkdir -p .build/uno/src
+	@echo [93msrc/control-system.ino[0m
+	@/usr/bin/ino preproc  -o $@ $^
+
+
+all : .build/uno/src/control-system.cpp
+	@true
+

@@ -44,8 +44,6 @@ private:
 
 	float speed;
 	int direction;
-
-	SoftwareSerial rowind_serial;
 };
 
 extern Rowind WindSensor;
