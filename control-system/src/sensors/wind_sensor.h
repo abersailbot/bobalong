@@ -10,8 +10,6 @@
 #ifndef WIND_SENSOR_H
 #define WIND_SENSOR_H
 
-#include <SoftwareSerial.h>
-
 class Rowind {
 public:
 	float get_speed();

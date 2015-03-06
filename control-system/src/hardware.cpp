@@ -15,14 +15,14 @@
 #include "Servo.h"
 #include "configure.h"
 
-Servo rudder;
-Servo sail;
+Servo rudder_servo;
+Servo sail_servo;
 
 ////////////////////////////////////////////////////////////////////////////////
 void initialise_servos()
 {
-    rudder.attach(PIN_RUDDER_DATA);
-    sail.attach(PIN_SAIL_DATA);
+    rudder_servo.attach(PIN_RUDDER_DATA);
+    sail_servo.attach(PIN_SAIL_DATA);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,8 +45,8 @@ void set_multiplexer(uint8_t line)
 void set_servo(uint8_t servo, uint8_t angle)
 {
     if(servo == SERVO_SAIL) {
-        sail.write(angle);
+        sail_servo.write(angle);
     } else {
-        rudder.write(angle);
+        rudder_servo.write(angle);
     }
 }

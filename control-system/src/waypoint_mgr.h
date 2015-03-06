@@ -1,5 +1,5 @@
 /*
-	waypoint_mgr.h 
+	waypoint_mgr.h
 
 	Maintains a list of waypoints and functions for manipulating them
 
@@ -7,7 +7,7 @@
  */
 
 
-#include "gps.h"
+#include "sensors/gps.h"
 
 #ifndef WAYPOINT_MGR_H
 #define WAYPOINT_MGR_H
@@ -20,19 +20,19 @@ public:
 
 	/**********************************************************************************
 	 * Returns the current waypoint we are on.
-	 * 
+	 *
 	 *********************************************************************************/
 	GPSPosition current();
 
 	/**********************************************************************************
 	 * Returns the index of the waypoint we are on.
-	 * 
+	 *
 	 *********************************************************************************/
 	int current_index();
 
 	/**********************************************************************************
 	 * Returns the number of waypoints stored.
-	 * 
+	 *
 	 *********************************************************************************/
 	unsigned int count();
 
@@ -40,23 +40,23 @@ public:
 	 * Advances to the next waypoint, if we are already on the last
 	 * waypoint then we stay here and when finished() is called, true
 	 * will be returned
-	 * 
+	 *
 	 *********************************************************************************/
 	void advance();
 
 	/**********************************************************************************
 	 * Returns true when advance is called on the last waypoint.
-	 * 
+	 *
 	 *********************************************************************************/
 	bool finished();
 
 	/**********************************************************************************
 	 * Adds a new set of waypoints to the waypoint manager.
 	 * NOTE: Writes over the existing waypoints.
-	 * 
+	 *
 	 * @param waypoint 			Array of new waypoints
 	 * @param num      			Number of waypoints
-	 *********************************************************************************/	
+	 *********************************************************************************/
 	void add_waypoints(GPSPosition* waypoint, unsigned int num);
 private:
 	GPSPosition waypoints[WPMGR_MAX_WAYPOINTS];  // All the waypoints

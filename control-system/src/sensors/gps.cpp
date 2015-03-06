@@ -54,19 +54,6 @@ int GPSDateTime::year()
 }
 
 //////////////////////////////////////////////////////////////////////////
-GPS::GPS()
-:gps_serial(PIN_GPS_RX, PIN_GPS_TX)
-{ }
-
-//////////////////////////////////////////////////////////////////////////
-void GPS::initialise()
-{
-	gps_serial.begin(4800);
-	debug_print("GPS setup", DEBUG_LEVEL_IMPORTANT);
-	delay(500);
-}
-
-//////////////////////////////////////////////////////////////////////////
 GPSPosition GPS::position()
 {
 	GPSPosition pos;
@@ -102,22 +89,12 @@ bool GPS::has_fix()
 //////////////////////////////////////////////////////////////////////////
 void GPS::poll_data()
 {
-	gps_serial.listen();
-
-        /*if(gps_serial.available() > 0) {
-          Serial.println("d");
-        } else {
-          Serial.println("n");
-        }*/
-        char c;
-	while(gps_serial.available()) {
-                //while(gps_serial.available() == 0) { ; }
-                c = gps_serial.read();
-                //Serial.print(c);
+    char c;
+	while(Serial1.available()) {
+        c = Serial1.read();
 		if(tiny_gps.encode(c)){
-                    Serial.println("encoded");
-
-                 }
+        	Serial.println("encoded");
+    	}
 
 	}
         Serial.println();
@@ -125,12 +102,11 @@ void GPS::poll_data()
 
 void GPS::print_nmea()
 {
-        gps_serial.listen();
         bool not_found = 1;
         char c;
         while(not_found) {
-          if(gps_serial.available()) {
-             c = gps_serial.read();
+          if(Serial1.available()) {
+             c = Serial1.read();
              Serial.print(c);
 
              if(c == '\n') {

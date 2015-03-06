@@ -12,7 +12,7 @@
   /*   CHANGE DESIRED HEADING RANGE -180 t0 180 */
   /**********************************************/
 
-#include "gps.h"
+#include "sensors/gps.h"
 #include <Servo.h>
 
 #ifndef NAVIGATOR_H

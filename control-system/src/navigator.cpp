@@ -9,9 +9,8 @@
 
 #include "navigator.h"
 #include "waypoint_mgr.h"
-#include "TinyGPS.h"
-#include "utils.h"
-#include "gps.h"
+#include "sensors/TinyGPS.h"
+#include "utils.h"1
 
 
 #define TACK_AMOUNT 				45

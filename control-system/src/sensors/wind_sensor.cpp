@@ -9,8 +9,9 @@
 
 #include "wind_sensor.h"
 #include "Arduino.h"
-#include "configure.h"
+#include "../configure.h"
 
+Rowind WindSensor = Rowind();
 
 float Rowind::get_speed() {
 	return speed;
