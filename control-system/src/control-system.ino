@@ -2,6 +2,7 @@
 #include <Servo.h>
 #include "utils.h"
 #include "sensors.h"
+#include "hardware.h"
 
 Servo rudder;
 
@@ -52,6 +53,9 @@ void loop() {
 	print_compass();
 	print_gps();
 	print_wind();
+
+	set_servo(SERVO_SAIL, 140);
+	set_servo(SERVO_RUDDER, 30);
 
 	delay(1500);
 }
