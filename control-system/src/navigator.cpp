@@ -43,6 +43,7 @@ void Navigator::navigate(int heading, int wind_dir)
 
 	GPSPosition curr_pos = Gps.position();
 	GPSPosition wp = Waypoints.current();
+
 	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
 	if( dist < 10) {
 		Waypoints.advance();

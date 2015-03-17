@@ -28,8 +28,8 @@
                               		// if its low then the gps is in sleep
                               		// mode(Double check this).
 // multiplexer
-#define MULTIPLEXER_IN1_PIN		9
-#define MULTIPLEXER_IN2_PIN		8
+#define MULTIPLEXER_D1_PIN		9
+#define MULTIPLEXER_D2_PIN		8
 #define MULTIPLEXER_SERIAL1		1
 #define MULTIPLEXER_GPS			2
 #define MULTIPLEXER_ROWIND		3
