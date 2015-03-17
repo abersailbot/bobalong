@@ -15,31 +15,42 @@ SensorMgr Sensors = SensorMgr();
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void SensorMgr::initialise()
+void SensorMgr::initialise(unsigned char sensors)
 {
-    HMC6343_initialise();
+    active_sensors = sensors;
+
+    if(active_sensors & SENSOR_COMPASS) {
+        HMC6343_initialise();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void SensorMgr::read()
 {
-    // update compass data
-    CompassData compass = HMC6343_read_data();
-    compass_bearing = compass.bearing;
-    compass_pitch = compass.pitch;
-    compass_roll = compass.roll;
+    if(active_sensors & SENSOR_COMPASS) {
+        // update compass data
+        CompassData compass = HMC6343_read_data();
+        compass_bearing = compass.bearing;
+        compass_pitch = compass.pitch;
+        compass_roll = compass.roll;
+    }
 
-    // update rowind
-    set_multiplexer(MULTIPLEXER_ROWIND);
-    WindSensor.poll_data();
-    wind_spd = WindSensor.get_speed();
-    wind_dir = WindSensor.get_direction();
+    if(active_sensors & SENSOR_ROWIND) {
+        // update rowind
+        set_multiplexer(MULTIPLEXER_ROWIND);
+        WindSensor.poll_data();
+        wind_spd = WindSensor.get_speed();
+        wind_dir = WindSensor.get_direction();
+    }
 
-    // update gps
-    set_multiplexer(MULTIPLEXER_GPS);
-    Gps.poll_data();
-    gps_position = Gps.position();
-    gps_date_time = Gps.date_time();
+    if(active_sensors & SENSOR_GPS) {
+        // update gps
+        set_multiplexer(MULTIPLEXER_GPS);
+        Gps.poll_data();
+        gps_position = Gps.position();
+        gps_date_time = Gps.date_time();
+        //Gps.print_nmea();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

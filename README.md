@@ -21,3 +21,11 @@ The goals of this project is to take part in Microtransat transatlantic race (ht
 - GSM Comms(TODO)
 - Sat Comms(TODO)
 - Low power software design (TODO)
+
+
+## BIG TODO ##
+
+* Look at data logging
+    - Provide support for different devices
+* Force control system into ino file
+    - code should provide support for that ino file

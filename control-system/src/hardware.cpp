@@ -29,15 +29,19 @@ void initialise_servos()
 void set_multiplexer(uint8_t line)
 {
     if(line & 1) {
-        digitalWrite(MULTIPLEXER_IN1_PIN, HIGH);
-    } else {
+        Serial.println("Serial changed to Serial 1");
         digitalWrite(MULTIPLEXER_IN1_PIN, LOW);
-    }
-
-    if(line & 2) {
+        digitalWrite(MULTIPLEXER_IN2_PIN, LOW);
+    } else if(line & 2) {
+        Serial.println("Serial changed to GPS");
+        digitalWrite(MULTIPLEXER_IN1_PIN, HIGH);
+        digitalWrite(MULTIPLEXER_IN2_PIN, LOW);
+    } else if(line & 3){
+        digitalWrite(MULTIPLEXER_IN1_PIN, LOW);
         digitalWrite(MULTIPLEXER_IN2_PIN, HIGH);
     } else {
-        digitalWrite(MULTIPLEXER_IN2_PIN, LOW);
+        digitalWrite(MULTIPLEXER_IN1_PIN, HIGH);
+        digitalWrite(MULTIPLEXER_IN2_PIN, HIGH);
     }
 }
 

@@ -9,19 +9,28 @@ Servo rudder;
 void setup() {
 	delay(5000);
 	Serial.begin(9600);
+	Serial1.begin(4800);
 	Serial.println("Starting up");
 
-	Sensors.initialise();
+	pinMode(MULTIPLEXER_IN1_PIN, OUTPUT);
+	digitalWrite(MULTIPLEXER_IN1_PIN, LOW);
+	pinMode(MULTIPLEXER_IN2_PIN, OUTPUT);
+	digitalWrite(MULTIPLEXER_IN2_PIN, LOW);
+
+	Sensors.initialise(SENSOR_COMPASS | SENSOR_GPS);
+
+	Serial.println("Initialised");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void print_compass() {
 	Serial.print("Heading: ");
 	Serial.print(Sensors.bearing());
-	Serial.print("Pitch: ");
+	Serial.print(" Pitch: ");
 	Serial.print(Sensors.pitch());
-	Serial.print("Roll: ");
-	Serial.print(Sensors.roll());
+	Serial.print(" Roll: ");
+	Serial.println(Sensors.roll());
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +51,7 @@ void print_gps() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void print_wind() {
-	Serial.print("Wind speed: "); Serial.print(Sensors.wind_speed()); Serial.print("direction: "); Serial.println(Sensors.wind_direction());
+	Serial.print("Wind speed: "); Serial.print(Sensors.wind_speed()); Serial.print(" Direction: "); Serial.println(Sensors.wind_direction());
 }
 
 

@@ -14,13 +14,17 @@
 #include "sensors/gps.h"
 #include "sensors/wind_sensor.h"
 
+#define SENSOR_COMPASS  0x01
+#define SENSOR_GPS      0x02
+#define SENSOR_ROWIND   0x04
+
 class SensorMgr {
 public:
     /***************************************************************************
      * Initialises any sensors that need to be initialised
      *
      **************************************************************************/
-    void initialise();
+    void initialise(unsigned char sensors);
 
     /***************************************************************************
      * Reads data from the externel sensors and updates the internal state of
@@ -70,6 +74,7 @@ private:
     unsigned int wind_dir;
     GPSPosition gps_position;
     GPSDateTime gps_date_time;
+    unsigned char active_sensors;
 };
 
 extern SensorMgr Sensors;

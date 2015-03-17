@@ -90,14 +90,16 @@ bool GPS::has_fix()
 void GPS::poll_data()
 {
     char c;
+	has_fix();
 	while(Serial1.available()) {
         c = Serial1.read();
+		Serial.print(c);
 		if(tiny_gps.encode(c)){
         	Serial.println("encoded");
     	}
 
 	}
-        Serial.println();
+	Serial.println();
 }
 
 void GPS::print_nmea()
