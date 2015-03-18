@@ -16,44 +16,6 @@
 GPS Gps = GPS();
 
 //////////////////////////////////////////////////////////////////////////
-int GPSDateTime::hours()
-{
-	return time / 1000000;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int GPSDateTime::minutes()
-{
-	return (time / 10000) % 100 ;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int GPSDateTime::seconds()
-{
-	return (time / 100) % 100;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int GPSDateTime::day()
-{
-	return date / 10000;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int GPSDateTime::month()
-{
-	return (date / 100) % 100;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int GPSDateTime::year()
-{
-	byte year = date % 100;
-	year += year > 80 ? 1900 : 2000;
-	return year;
-}
-
-//////////////////////////////////////////////////////////////////////////
 GPSPosition GPS::position()
 {
 	GPSPosition pos;
@@ -65,7 +27,12 @@ GPSPosition GPS::position()
 GPSDateTime GPS::date_time()
 {
 	GPSDateTime date_time;
-	tiny_gps.get_datetime(&date_time.date, &date_time.time);
+	byte hundredths;
+	unsigned long fix_age;
+
+	tiny_gps.crack_datetime(&date_time.year, &date_time.month, &date_time.day,
+	&date_time.hour, &date_time.minute, &date_time.second, &hundredths, &fix_age);
+
 	return date_time;
 }
 

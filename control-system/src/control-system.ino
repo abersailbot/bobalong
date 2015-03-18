@@ -205,13 +205,22 @@ void startLog()
 	GPSDateTime time = Sensors.date_time();
 
 	// timestamp
-	Serial1.print(time.day()); Serial.print("/");
-	Serial1.print(time.month()); Serial.print("/");
-	Serial1.println(time.year());
+	Serial.print(time.day); Serial.print("/");
+	Serial.print(time.month); Serial.print("/");
+	Serial.println(time.year);
 
-	Serial1.print(time.hours()); Serial.print(":");
-	Serial1.print(time.minutes()); Serial.print(":");
-	Serial1.print(time.seconds()); Serial.print(" ");
+	Serial.print(time.hour); Serial.print(":");
+	Serial.print(time.minute); Serial.print(":");
+	Serial.print(time.second); Serial.print(" ");
+
+	// timestamp
+	Serial1.print(time.day); Serial1.print("/");
+	Serial1.print(time.month); Serial1.print("/");
+	Serial1.println(time.year);
+
+	Serial1.print(time.hour); Serial1.print(":");
+	Serial1.print(time.minute); Serial1.print(":");
+	Serial1.print(time.second); Serial1.print(" ");
 
 }
 

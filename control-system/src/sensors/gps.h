@@ -22,14 +22,12 @@ struct GPSPosition {
 
 class GPSDateTime {
 public:
-	int hours();
-	int minutes();
-	int seconds();
-	int day();
-	int month();
-	int year();
-	unsigned long time;
-	unsigned long date;
+	int year;
+	byte month;
+	byte day;
+	byte hour;
+	byte minute;
+	byte second;
 };
 
 class GPS {
