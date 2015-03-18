@@ -36,13 +36,16 @@ void set_multiplexer(uint8_t line)
         Serial.println("Serial changed to GPS");
         digitalWrite(MULTIPLEXER_D1_PIN, HIGH);
         digitalWrite(MULTIPLEXER_D2_PIN, LOW);
-    } else if(line & 3){
+    } else if(line & 4){
+        Serial.println("Serial changed to rowind");
         digitalWrite(MULTIPLEXER_D1_PIN, LOW);
         digitalWrite(MULTIPLEXER_D2_PIN, HIGH);
     } else {
+        Serial.println("Serial changed to Serial 4");
         digitalWrite(MULTIPLEXER_D1_PIN, HIGH);
         digitalWrite(MULTIPLEXER_D2_PIN, HIGH);
     }
+    delay(50);
 }
 
 //////////////////////////////////////////////////////////////////////////

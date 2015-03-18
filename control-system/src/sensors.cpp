@@ -27,15 +27,12 @@ void SensorMgr::initialise(unsigned char sensors)
 ////////////////////////////////////////////////////////////////////////////////
 void SensorMgr::read()
 {
-    if(active_sensors & SENSOR_COMPASS) {
-        // update compass data
-        CompassData compass = HMC6343_read_data();
-        compass_bearing = compass.bearing;
-        compass_pitch = compass.pitch;
-        compass_roll = compass.roll;
-    }
+    Serial.println("Reading sensors");
+
+    // DO NOT CHANGE THE ORDER!!! COMPASS BREAKS if it's read after rowind, NO ONE KNOWS
 
     if(active_sensors & SENSOR_ROWIND) {
+        //Serial.println("Reading rowind");
         // update rowind
         set_multiplexer(MULTIPLEXER_ROWIND);
         WindSensor.poll_data();
@@ -44,12 +41,22 @@ void SensorMgr::read()
     }
 
     if(active_sensors & SENSOR_GPS) {
+        Serial.println("Reading gps");
         // update gps
         set_multiplexer(MULTIPLEXER_GPS);
         Gps.poll_data();
         gps_position = Gps.position();
         gps_date_time = Gps.date_time();
         //Gps.print_nmea();
+    }
+
+    if(active_sensors & SENSOR_COMPASS) {
+        Serial.println("Reading compass");
+        // update compass data
+        CompassData compass = HMC6343_read_data();
+        compass_bearing = compass.bearing;
+        compass_pitch = compass.pitch;
+        compass_roll = compass.roll;
     }
 }
 

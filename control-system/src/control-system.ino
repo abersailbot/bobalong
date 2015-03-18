@@ -5,7 +5,8 @@
 #include "hardware.h"
 #include "waypoint_mgr.h"
 
-Servo rudder;
+#define SAIL_LEFT	135
+#define SAIL_RIGHT	45
 
 int desired_heading;
 
@@ -25,7 +26,15 @@ void setup() {
 
 	initialise_servos();
 
-	// add waypoints
+	GPSPosition wps[3];
+	wps[0].latitude = 52.415603;
+	wps[0].longitude = -4.065145;
+
+	wps[1].latitude = 52.415454;
+	wps[1].longitude = -4.065937;
+
+	wps[2].latitude = 52.416385;
+	wps[2].longitude = -4.066550;
 
 
 	Serial.println("Initialised");
@@ -36,39 +45,56 @@ void setup() {
 void loop() {
 	Sensors.read();
 
-	// print sensor data
-	print_compass();
-	print_gps();
-	print_wind();
+	// log sensor data
+	startLog();
+	log_compass();
+	log_gps();
+	log_wind();
+	endLog();
 
 	// test servos
 	set_servo(SERVO_SAIL, 140);
 	set_servo(SERVO_RUDDER, 30);
 
 	// advance to the next waypoint if we are there
+	if(at_waypoint()) {
+		Waypoints.advance();
+	}
+
+	desired_heading = desiredHeading();
+
+	// set rudder
+	int rudder_pos = get_rudder_angle(Sensors.bearing());
+	Serial.print("Rudder pos: "); Serial.println(rudder_pos);
+	set_servo(SERVO_RUDDER, rudder_pos);
+
+	setSail();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool at_waypoint()
+{
 	GPSPosition curr_pos = Sensors.position();
 	GPSPosition wp = Waypoints.current();
 
 	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
 
 	if( dist < 10) {
-		Waypoints.advance();
-		Serial.println("Hit waypoint, moving onto next");
+		return true;
 	} else {
 		Serial.print("Distance : ");
 		Serial.println(dist);
+		return false;
 	}
+}
 
-	desired_heading = TinyGPS::course_to(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
+////////////////////////////////////////////////////////////////////////////////
+int desiredHeading()
+{
+	GPSPosition curr_pos = Sensors.position();
+	GPSPosition wp = Waypoints.current();
 
-	// set rudder
-	int rudder_pos = get_rudder_angle(Sensors.bearing());
-	if(rudder_pos < 85) {
-		Serial.println("Turn left!");
-	} else if(rudder_pos > 95) {
-		Serial.println("Turn right!");
-	}
-	Serial.print("Rudder pos: "); Serial.println(rudder_pos);
+	return TinyGPS::course_to(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,8 +102,6 @@ int get_rudder_angle(int heading)
 {
 
 	// PI Controller
-
-
 	float pCorrection;
 	float iCorrection;
 	float error;
@@ -125,33 +149,74 @@ int get_rudder_angle(int heading)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void print_compass() {
-	Serial.print("Heading: ");
+void setSail()
+{
+	if(Sensors.wind_direction() > 180) {
+		set_servo(SERVO_SAIL, SAIL_LEFT);
+	} else {
+		set_servo(SERVO_SAIL, SAIL_RIGHT);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void log_compass() {
+	Serial.print(" Heading: ");
 	Serial.print(Sensors.bearing());
 	Serial.print(" Pitch: ");
 	Serial.print(Sensors.pitch());
 	Serial.print(" Roll: ");
-	Serial.println(Sensors.roll());
+	Serial.print(Sensors.roll());
 
+	Serial1.print(" Heading: ");
+	Serial1.print(Sensors.bearing());
+	Serial1.print(" Pitch: ");
+	Serial1.print(Sensors.pitch());
+	Serial1.print(" Roll: ");
+	Serial1.print(Sensors.roll());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void print_gps() {
+void log_gps() {
 	GPSPosition pos = Sensors.position();
-	Serial.print("position: "); Serial.print(pos.latitude); Serial.print(" "); Serial.println(pos.longitude);
-	GPSDateTime time = Sensors.date_time();
-	Serial.print("time: ");
-	Serial.print(time.hours()); Serial.print("h ");
-	Serial.print(time.minutes()); Serial.print("m ");
-	Serial.print(time.seconds()); Serial.print("s ");
+	Serial.print(" Latitude: "); Serial.print(pos.latitude, 6); Serial.print(" Longitude: "); Serial.print(pos.longitude, 6);
 
-	Serial.print(time.day()); Serial.print("/");
-	Serial.print(time.month()); Serial.print("/");
-	Serial.println(time.year()); Serial.print("\n");
+	Serial1.print(" Latitude: "); Serial1.print(pos.latitude, 6); Serial1.print(" Longitude: "); Serial1.print(pos.longitude, 6);
+
+	GPSPosition wp = Waypoints.current();
+
+	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, pos.latitude, pos.longitude);
+	Serial.print(" WpDistance: "); Serial.print(dist);
+
+	Serial1.print(" WpDistance: "); Serial1.print(dist);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void log_wind() {
+	Serial.print(" WindSpd: "); Serial.print(Sensors.wind_speed()); Serial.print(" WindDir: "); Serial.print(Sensors.wind_direction());
+
+	Serial1.print(" WindSpd: "); Serial1.print(Sensors.wind_speed()); Serial1.print(" WindDir: "); Serial1.print(Sensors.wind_direction());
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void print_wind() {
-	Serial.print("Wind speed: "); Serial.print(Sensors.wind_speed()); Serial.print(" Direction: "); Serial.println(Sensors.wind_direction());
+void startLog()
+{
+	set_multiplexer(MULTIPLEXER_SERIAL1);
+
+	GPSDateTime time = Sensors.date_time();
+
+	// timestamp
+	Serial1.print(time.day()); Serial.print("/");
+	Serial1.print(time.month()); Serial.print("/");
+	Serial1.println(time.year());
+
+	Serial1.print(time.hours()); Serial.print(":");
+	Serial1.print(time.minutes()); Serial.print(":");
+	Serial1.print(time.seconds()); Serial.print(" ");
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void endLog()
+{
+	Serial1.println();
 }

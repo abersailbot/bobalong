@@ -29,11 +29,13 @@ CompassData HMC6343_read_data() {
 	byte high, low;
 	unsigned long time_out;
 
+	Serial.println("Setting Register");
 	// Select the bearing register to be read
 	Wire.beginTransmission(HMC6343_ADDRESS);
 	Wire.write(HMC6343_BEARING_REG);
 	Wire.endTransmission();
 
+	Serial.println("Request data");
 	// requests 6 bytes which will include bearing, pitch and roll
 	Wire.requestFrom(HMC6343_ADDRESS, 6, true);
 

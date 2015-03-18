@@ -30,7 +30,7 @@ private:
 	*                 				$IIMWV,315.0,R,000.00,N,A
 	*
 	*********************************************************************************/
-	char* get_nmea();
+	bool get_nmea();
 
 	float speed;
 	int direction;
