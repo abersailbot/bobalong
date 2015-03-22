@@ -20,6 +20,7 @@ GPSPosition GPS::position()
 {
 	GPSPosition pos;
 	tiny_gps.f_get_position(&pos.latitude, &pos.longitude);
+
 	return pos;
 }
 

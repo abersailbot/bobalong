@@ -57,7 +57,7 @@ public:
 	 * @param waypoint 			Array of new waypoints
 	 * @param num      			Number of waypoints
 	 *********************************************************************************/
-	void add_waypoints(GPSPosition* waypoint, unsigned int num);
+	void add_waypoint(float latitude, float longitude);
 private:
 	GPSPosition waypoints[WPMGR_MAX_WAYPOINTS];  // All the waypoints
 	unsigned int curr_waypoint; // The current waypoint we are on

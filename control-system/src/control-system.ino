@@ -26,15 +26,7 @@ void setup() {
 
 	initialise_servos();
 
-	GPSPosition wps[3];
-	wps[0].latitude = 52.415603;
-	wps[0].longitude = -4.065145;
-
-	wps[1].latitude = 52.415454;
-	wps[1].longitude = -4.065937;
-
-	wps[2].latitude = 52.416385;
-	wps[2].longitude = -4.066550;
+	Waypoints.add_waypoint(52.417462, -4.080117);
 
 
 	Serial.println("Initialised");

@@ -45,7 +45,7 @@ void WaypointMgr::advance()
 	}
 	else if (curr_waypoint == waypoint_end) {
 		is_finished = true;
-        }
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,24 +55,19 @@ bool WaypointMgr::finished()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void WaypointMgr::add_waypoints(GPSPosition* waypoint, unsigned int num)
+void WaypointMgr::add_waypoint(float latitude, float longitude)
 {
-	if(num == 0) {
-		debug_print("WARNING: No waypoints in the list to add!", DEBUG_LEVEL_CRITICAL);
-		is_finished = true;
-		return;
-	}
-	else if(num >= WPMGR_MAX_WAYPOINTS) {
+	if(waypoint_end >= WPMGR_MAX_WAYPOINTS) {
 		debug_print("WARNING: More waypoints than space, some will be lost!", DEBUG_LEVEL_CRITICAL);
-		num = WPMGR_MAX_WAYPOINTS;
+		delay(1000);
+		return;
 	}
 
 	is_finished = false;
-	waypoint_end = num - 1;
+	waypoints[waypoint_end].latitude = latitude;
+	waypoints[waypoint_end].longitude = longitude;
 
-	for(unsigned int i = 0; i < num; i++) {
-		waypoints[i] = waypoint[i];
-	}
+	waypoint_end++;
 
-	debug_print("Waypoints added!", DEBUG_LEVEL_IMPORTANT);
+	debug_print("Waypoint added!", DEBUG_LEVEL_IMPORTANT);
 }
