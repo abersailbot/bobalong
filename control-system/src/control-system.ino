@@ -35,6 +35,8 @@ void setup() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void loop() {
+	static int rudder_pos = 90;
+
 	Sensors.read();
 
 	// log sensor data
@@ -44,10 +46,6 @@ void loop() {
 	log_wind();
 	endLog();
 
-	// test servos
-	set_servo(SERVO_SAIL, 140);
-	set_servo(SERVO_RUDDER, 30);
-
 	// advance to the next waypoint if we are there
 	if(at_waypoint()) {
 		Waypoints.advance();
@@ -56,7 +54,7 @@ void loop() {
 	desired_heading = desiredHeading();
 
 	// set rudder
-	int rudder_pos = get_rudder_angle(Sensors.bearing());
+	rudder_pos = get_rudder_angle(Sensors.bearing());
 	Serial.print("Rudder pos: "); Serial.println(rudder_pos);
 	set_servo(SERVO_RUDDER, rudder_pos);
 
@@ -69,13 +67,12 @@ bool at_waypoint()
 	GPSPosition curr_pos = Sensors.position();
 	GPSPosition wp = Waypoints.current();
 
-	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
+	float dist = TinyGPS::distance_between(curr_pos.latitude, curr_pos.longitude, wp.latitude, wp.longitude);
 
 	if( dist < 10) {
+		Serial.println("Hit Waypoint");
 		return true;
 	} else {
-		Serial.print("Distance : ");
-		Serial.println(dist);
 		return false;
 	}
 }
@@ -138,6 +135,22 @@ int get_rudder_angle(int heading)
 	}
 
 	return rudderAngle;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+///
+/// Temp simple rudder controller
+int getRudderAngle(int desiredBearing, int bearing)
+{
+	int angle = desiredBearing - bearing;
+
+	if(angle > 45) {
+		angle = 45;
+	} else if(angle < -45) {
+		angle = -45;
+	}
+
+	return NORMAL_RUDDER_POS + angle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

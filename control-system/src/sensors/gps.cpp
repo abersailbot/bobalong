@@ -60,14 +60,12 @@ void GPS::poll_data()
     char c;
 	has_fix();
 
-	delay(500);
-	unsigned long timeout = millis() + 500;
+	delay(100);
+	unsigned long timeout = millis() + 250;
 
 	while(timeout > millis()) {
-		delay(1);
-		while(!Serial1.available());
+		if(!Serial1.available()) { continue; }
 		c = Serial1.read();
-		Serial.print(c);
 		tiny_gps.encode(c);
 	}
 	Serial.println();
