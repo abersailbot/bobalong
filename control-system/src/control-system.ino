@@ -141,22 +141,6 @@ int get_rudder_angle(int heading)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-///
-/// Temp simple rudder controller
-int getRudderAngle(int desiredBearing, int bearing)
-{
-	int angle = desiredBearing - bearing;
-
-	if(angle > 45) {
-		angle = -45;
-	} else if(angle < -45) {
-		angle = 45;
-	}
-
-	return NORMAL_RUDDER_POS + angle;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void setSail()
 {
 	if(Sensors.wind_direction() > 180) {
