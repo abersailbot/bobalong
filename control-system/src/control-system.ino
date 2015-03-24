@@ -4,11 +4,13 @@
 #include "sensors.h"
 #include "hardware.h"
 #include "waypoint_mgr.h"
+#include "sd_logger.hpp"
 
 #define SAIL_LEFT	135
 #define SAIL_RIGHT	45
 
 int desired_heading;
+SDLogger sdLogger;
 
 void setup() {
 	delay(5000);
@@ -47,6 +49,9 @@ void loop() {
 	log_gps();
 	log_wind();
 	endLog();
+
+	// log to the sd card
+	sdLogger.appendLog();
 
 	// advance to the next waypoint if we are there
 	if(at_waypoint()) {
@@ -150,6 +155,12 @@ void setSail()
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Logging to the serial monitor
+//
+////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////////////////////////////
 void log_compass() {
 	Serial.print(" Heading: ");
@@ -158,13 +169,6 @@ void log_compass() {
 	Serial.print(Sensors.pitch());
 	Serial.print(" Roll: ");
 	Serial.print(Sensors.roll());
-
-	Serial1.print(" Heading: ");
-	Serial1.print(Sensors.bearing());
-	Serial1.print(" Pitch: ");
-	Serial1.print(Sensors.pitch());
-	Serial1.print(" Roll: ");
-	Serial1.print(Sensors.roll());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,24 +176,16 @@ void log_gps() {
 	GPSPosition pos = Sensors.position();
 	Serial.print(" Latitude: "); Serial.print(pos.latitude, 6); Serial.print(" Longitude: "); Serial.print(pos.longitude, 6);
 
-	Serial1.print(" Latitude: "); Serial1.print(pos.latitude, 6); Serial1.print(" Longitude: "); Serial1.print(pos.longitude, 6);
-
 	GPSPosition wp = Waypoints.current();
-
 	float dist = TinyGPS::distance_between(wp.latitude, wp.longitude, pos.latitude, pos.longitude);
+
 	Serial.print(" WpDistance: "); Serial.print(dist);
-
-	Serial1.print(" WpDistance: "); Serial1.print(dist);
-
 	Serial.print(" Waypoint: "); Serial.print(Waypoints.current_index());
-	Serial1.print(" Waypoint: "); Serial1.print(Waypoints.current_index());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void log_wind() {
 	Serial.print(" WindSpd: "); Serial.print(Sensors.wind_speed()); Serial.print(" WindDir: "); Serial.print(Sensors.wind_direction());
-
-	Serial1.print(" WindSpd: "); Serial1.print(Sensors.wind_speed()); Serial1.print(" WindDir: "); Serial1.print(Sensors.wind_direction());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -208,19 +204,10 @@ void startLog()
 	Serial.print(time.minute); Serial.print(":");
 	Serial.print(time.second); Serial.print(" ");
 
-	// timestamp
-	Serial1.print(time.day); Serial1.print("/");
-	Serial1.print(time.month); Serial1.print("/");
-	Serial1.println(time.year);
-
-	Serial1.print(time.hour); Serial1.print(":");
-	Serial1.print(time.minute); Serial1.print(":");
-	Serial1.print(time.second); Serial1.print(" ");
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void endLog()
 {
-	Serial1.println();
+	Serial.println();
 }
