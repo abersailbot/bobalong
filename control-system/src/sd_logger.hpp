@@ -19,6 +19,7 @@ private:
     void logGPS();
     void logWaypoint();
     void logWind();
+    void logPID();
 };
 
 #endif

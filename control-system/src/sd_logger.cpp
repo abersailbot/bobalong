@@ -12,6 +12,7 @@
 #include "sensors.h"
 #include "hardware.h"
 #include "waypoint_mgr.h"
+#include "boat_state.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 void SDLogger::appendLog()
@@ -69,10 +70,23 @@ void SDLogger::logWaypoint()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SDLogger::logWind() {
+void SDLogger::logWind()
+{
     Serial1.print(" WindSpd: ");
     Serial1.print(Sensors.wind_speed());
 
     Serial1.print(" WindDir: ");
     Serial1.print(Sensors.wind_direction());
+}
+
+void SDLogger::logPID()
+{
+    Serial1.print(" pGains: ");
+    Serial1.print(lastState.pGain);
+
+    Serial1.print(" iGains: ");
+    Serial1.print(lastState.iGain);
+
+    Serial1.print(" errorSum: ");
+    Serial1.print(lastState.errorSum);
 }

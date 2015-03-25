@@ -5,12 +5,15 @@
 #include "hardware.h"
 #include "waypoint_mgr.h"
 #include "sd_logger.hpp"
+#include "boat_state.hpp"
 
 #define SAIL_LEFT	135
 #define SAIL_RIGHT	45
 
 int desired_heading;
 SDLogger sdLogger;
+
+BoatState lastState;
 
 void setup() {
 	delay(5000);
@@ -124,11 +127,14 @@ int get_rudder_angle(int heading)
 	//  P
 	error = desired_headingCP * (-1);
 	pCorrection = P_VAL * error;
+	lastState.pGain = pCorrection;
 
 
 	//  I
 	errorSum += error;
 	iCorrection = I_VAL * errorSum;
+	lastState.iGain = iCorrection;
+	lastState.errorSum = errorSum;
 
 	errorSum *= 0.95;
 

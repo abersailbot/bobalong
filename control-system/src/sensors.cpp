@@ -10,6 +10,7 @@
 #include "sensors.h"
 #include "hardware.h"
 #include "configure.h"
+#include "boat_state.hpp"
 
 SensorMgr Sensors = SensorMgr();
 
@@ -36,8 +37,8 @@ void SensorMgr::read()
         // update rowind
         set_multiplexer(MULTIPLEXER_ROWIND);
         WindSensor.poll_data();
-        wind_spd = WindSensor.get_speed();
-        wind_dir = WindSensor.get_direction();
+        lastState.windSpd = WindSensor.get_speed();
+        lastState.windDir = WindSensor.get_direction();
     }
 
     if(active_sensors & SENSOR_GPS) {
@@ -45,8 +46,8 @@ void SensorMgr::read()
         // update gps
         set_multiplexer(MULTIPLEXER_GPS);
         Gps.poll_data();
-        gps_position = Gps.position();
-        gps_date_time = Gps.date_time();
+        lastState.gpsPosition = Gps.position();
+        lastState.gpsDateTime = Gps.date_time();
         //Gps.print_nmea();
     }
 
@@ -55,50 +56,50 @@ void SensorMgr::read()
         // update compass data
         CompassData compass = HMC6343_read_data();
         // compass is positioned 98 degrees off the front of the boat
-        compass_bearing = clamp_angle(compass.bearing +273);
-        compass_pitch = compass.pitch;
-        compass_roll = compass.roll;
+        lastState.compassBearing = clamp_angle(compass.bearing +273);
+        lastState.compassPitch = compass.pitch;
+        lastState.compassRoll = compass.roll;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int SensorMgr::bearing()
 {
-    return compass_bearing;
+    return lastState.compassBearing;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int SensorMgr::pitch()
 {
-    return compass_pitch;
+    return lastState.compassPitch;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int SensorMgr::roll()
 {
-    return compass_roll;
+    return lastState.compassRoll;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 float SensorMgr::wind_speed()
 {
-    return wind_spd;
+    return lastState.windSpd;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int SensorMgr::wind_direction()
 {
-    return wind_dir;
+    return lastState.windDir;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 GPSPosition SensorMgr::position()
 {
-    return gps_position;
+    return lastState.gpsPosition;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 GPSDateTime SensorMgr::date_time()
 {
-    return gps_date_time;
+    return lastState.gpsDateTime;
 }
