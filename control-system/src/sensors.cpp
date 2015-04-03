@@ -55,7 +55,7 @@ void SensorMgr::read()
         // update compass data
         CompassData compass = HMC6343_read_data();
         // compass is positioned 98 degrees off the front of the boat
-        compass_bearing = clamp_angle(compass.bearing - 98);
+        compass_bearing = clamp_angle(compass.bearing +273);
         compass_pitch = compass.pitch;
         compass_roll = compass.roll;
     }

@@ -26,8 +26,10 @@ void setup() {
 
 	initialise_servos();
 
-	Waypoints.add_waypoint(52.417462, -4.080117);
-
+	Waypoints.add_waypoint(52.400246, -3.869921);
+	Waypoints.add_waypoint(52.400825, -3.870545);
+	Waypoints.add_waypoint(52.400816, -3.869552);
+	Waypoints.add_waypoint(52.399860, -3.869579);
 
 	Serial.println("Initialised");
 }
@@ -51,7 +53,8 @@ void loop() {
 		Waypoints.advance();
 	}
 
-	desired_heading = desiredHeading();
+	desired_heading = clamp_angle(desiredHeading());
+	Serial.print("Desired: "); Serial.println(desired_heading);
 
 	// set rudder
 	rudder_pos = get_rudder_angle(Sensors.bearing());
@@ -83,7 +86,7 @@ int desiredHeading()
 	GPSPosition curr_pos = Sensors.position();
 	GPSPosition wp = Waypoints.current();
 
-	return TinyGPS::course_to(wp.latitude, wp.longitude, curr_pos.latitude, curr_pos.longitude);
+	return TinyGPS::course_to(curr_pos.latitude, curr_pos.longitude, wp.latitude, wp.longitude);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,9 +148,9 @@ int getRudderAngle(int desiredBearing, int bearing)
 	int angle = desiredBearing - bearing;
 
 	if(angle > 45) {
-		angle = 45;
-	} else if(angle < -45) {
 		angle = -45;
+	} else if(angle < -45) {
+		angle = 45;
 	}
 
 	return NORMAL_RUDDER_POS + angle;
@@ -193,6 +196,9 @@ void log_gps() {
 	Serial.print(" WpDistance: "); Serial.print(dist);
 
 	Serial1.print(" WpDistance: "); Serial1.print(dist);
+
+	Serial.print(" Waypoint: "); Serial.print(Waypoints.current_index());
+	Serial1.print(" Waypoint: "); Serial1.print(Waypoints.current_index());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
